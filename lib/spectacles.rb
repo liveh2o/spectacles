@@ -7,10 +7,6 @@ require 'spectacles/version'
 require 'spectacles/schema_statements/sqlite_adapter'
 require 'active_record/connection_adapters/sqlite_adapter'
 
-ActiveRecord::ConnectionAdapters::AbstractAdapter.class_eval do 
-  include Spectacles::SchemaStatements::AbstractAdapter
-end
-
 ActiveRecord::ConnectionAdapters::SQLiteAdapter.class_eval do 
   include Spectacles::SchemaStatements::SQLiteAdapter
 end

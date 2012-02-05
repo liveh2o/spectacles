@@ -20,6 +20,10 @@ module Spectacles
         execute(query)
       end
 
+      def views
+        raise "Override view for your db adapter in #{self.class}"
+      end
+
     private
 
       def build_view(view_name, query)

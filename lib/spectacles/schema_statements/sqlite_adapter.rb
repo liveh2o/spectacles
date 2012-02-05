@@ -1,8 +1,11 @@
+require 'spectacles/schema_statements/abstract_adapter'
+
 module Spectacles
   
   module SchemaStatements
     
     module SQLiteAdapter
+      include Spectacles::SchemaStatements::AbstractAdapter
       
       def views(name = 'SCHEMA', table_name = nil) #:nodoc:
         sql = <<-SQL
