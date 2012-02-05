@@ -10,27 +10,31 @@ module Spectacles
         build_query = yield if block_given?
         build_query = build_query.to_sql if build_query.respond_to?(:to_sql)
 
-        build_view(view_name, build_query)
+        query = create_view_statement(view_name, build_query)
+        execute(query)
+      end
+
+      def create_view_statement(view_name, create_query)
+        query = "CREATE VIEW ? AS #{create_query}"
+        query_array = [query, view_name.to_s]
+
+        return ActiveRecord::Base.__send__(:sanitize_sql_array, query_array)  
       end
 
       def drop_view(view_name)
-        query = "DROP VIEW IF EXISTS ?"
-        query_array = [query, view_name.to_s]
-        query = ActiveRecord::Base.__send__(:sanitize_sql_array, query_array)  
+        query = drop_view_statement(view_name)
         execute(query)
+      end
+
+      def drop_view_statement(view_name)
+        query = "DROP VIEW IF EXISTS ? "
+        query_array = [query, view_name.to_s]
+
+        return ActiveRecord::Base.__send__(:sanitize_sql_array, query_array)  
       end
 
       def views
         raise "Override view for your db adapter in #{self.class}"
-      end
-
-    private
-
-      def build_view(view_name, query)
-        query = "CREATE VIEW ? AS #{query}"
-        query_array = [query, view_name.to_s]
-        query = ActiveRecord::Base.__send__(:sanitize_sql_array, query_array)  
-        execute(query)
       end
 
     end
