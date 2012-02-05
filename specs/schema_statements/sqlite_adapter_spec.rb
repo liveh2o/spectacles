@@ -1,21 +1,14 @@
 require 'spec_helper'
 
-describe Spectacles::SchemaStatements::SQLiteAdapter do
-  describe "ActiveRecord::SchemaDumper#dump" do 
-    before(:each) do
-      ActiveRecord::Base.connection.drop_view(:new_product_users)
+describe "Spectacles::SchemaStatements::SQLiteAdapter" do
+  File.delete(File.expand_path(File.dirname(__FILE__) + "/../test.db")) rescue nil
 
-      ActiveRecord::Base.connection.create_view(:new_product_users) do 
-        "SELECT name AS product_name, first_name AS username FROM
-        products JOIN users ON users.id = products.user_id"
-      end
-    end
+  ActiveRecord::Base.establish_connection(
+    :adapter => "sqlite3",
+    :database => "specs/test.db"
+  )
+  
+  load_schema
 
-    it "should return create_view in dump stream" do 
-      stream = StringIO.new
-      ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
-      stream.string.must_match(/create_view/)
-    end
-
-  end
+  it_behaves_like "an adapter", "SQLiteAdapter"
 end
