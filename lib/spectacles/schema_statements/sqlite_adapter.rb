@@ -2,7 +2,7 @@ module Spectacles
   
   module SchemaStatements
     
-    class SQLiteAdapter
+    module SQLiteAdapter
       
       def views(name = 'SCHEMA', table_name = nil) #:nodoc:
         sql = <<-SQL
