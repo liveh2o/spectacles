@@ -6,7 +6,7 @@ require 'minitest/spec'
 require 'minitest/autorun'
 require 'minitest/pride'
 
-File.delete(File.dirname(__FILE__) + "/test.db")
+File.delete(File.dirname(__FILE__) + "/test.db") rescue nil
 
 ActiveRecord::Base.establish_connection(
   :adapter => "sqlite3",
