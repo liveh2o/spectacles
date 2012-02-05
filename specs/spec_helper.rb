@@ -15,6 +15,10 @@ ActiveRecord::Base.connection.tables.each do |table|
   ActiveRecord::Base.connection.drop_table(table)
 end
 
+ActiveRecord::Base.connection.views.each do |view|
+  ActiveRecord::Base.connection.drop_view(view)
+end
+
 class User < ActiveRecord::Base
   has_many :products
 end
