@@ -10,5 +10,4 @@ describe Spectacles::SchemaStatements::SQLiteAdapter do
     end
 
   end
-  
 end

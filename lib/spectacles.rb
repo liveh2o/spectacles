@@ -20,7 +20,6 @@ ActiveRecord::SchemaDumper.class_eval do
     ::Spectacles::SchemaDumper.dump_views(stream, @connection)
     _spectacles_orig_trailer(stream)
   end
-
 end
 
 Spectacles::load_adapters

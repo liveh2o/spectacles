@@ -1,9 +1,6 @@
 module Spectacles
-  
   module SchemaStatements
-
     module AbstractAdapter
-
       def create_view(view_name, build_query = nil)
         raise "#{self.class} requires a query or block" if build_query.nil? && !block_given?
 
@@ -36,9 +33,6 @@ module Spectacles
       def views
         raise "Override view for your db adapter in #{self.class}"
       end
-
     end
-
   end
-
 end

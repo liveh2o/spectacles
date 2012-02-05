@@ -1,9 +1,7 @@
 require 'spectacles/schema_statements/abstract_adapter'
 
 module Spectacles
-  
   module SchemaStatements
-    
     module SQLiteAdapter
       include Spectacles::SchemaStatements::AbstractAdapter
 
@@ -30,9 +28,6 @@ module Spectacles
         row = exec_query(sql, "SCHEMA").first
         row['sql'].gsub(/CREATE VIEW .*? AS/i, "") 
       end
-      
     end
-    
   end
-  
 end

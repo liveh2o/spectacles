@@ -5,6 +5,14 @@ describe Spectacles::SchemaStatements::AbstractAdapter do
     extend Spectacles::SchemaStatements::AbstractAdapter
     def self.execute(query); query; end 
   end
+
+  describe "#views" do 
+
+    it "throws error when accessed on AbstractAdapter" do 
+      lambda { TestBase.views }.must_raise(RuntimeError)
+    end
+
+  end
   
   describe "#create_view" do
     let(:view_name) { :view_name }
