@@ -21,6 +21,23 @@ shared_examples_for "an adapter" do |adapter|
       ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
       stream.string.must_match(/create_view/)
     end
+
+    it "should return create_view in dump stream" do 
+      stream = StringIO.new
+      ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
+
+      ActiveRecord::Base.connection.tables.each do |table|
+        ActiveRecord::Base.connection.drop_table(table)
+      end
+
+      ActiveRecord::Base.connection.views.each do |view|
+        ActiveRecord::Base.connection.drop_view(view)
+      end
+
+      eval(stream.string)
+      
+      ActiveRecord::Base.connection.views.must_include('new_product_users')
+    end
   end
 
   describe "#create_view" do
