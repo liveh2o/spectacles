@@ -15,6 +15,14 @@ ActiveRecord::Base.connection.tables.each do |table|
   ActiveRecord::Base.connection.drop_table(table)
 end
 
+class User < ActiveRecord::Base
+  has_many :products
+end
+
+class Product < ActiveRecord::Base
+  belongs_to :user
+end
+
 ActiveRecord::Schema.define(:version => 1) do
   create_table :users do |t|
     t.string :first_name
@@ -27,12 +35,8 @@ ActiveRecord::Schema.define(:version => 1) do
     t.boolean :available, :default => true
     t.belongs_to :user
   end
-end
 
-class User < ActiveRecord::Base
-  has_many :products
-end
-
-class Product < ActiveRecord::Base
-  belongs_to :user
+  create_view :new_product_users do 
+    "SELECT name AS product_name, first_name AS username FROM products JOIN users ON users.id = products.user_id"
+  end
 end

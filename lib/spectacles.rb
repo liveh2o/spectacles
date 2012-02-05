@@ -2,6 +2,6 @@ require 'active_record'
 require 'spectacles/schema_statements'
 require 'spectacles/version'
 
-module Spectacles
-  # Your code goes here...
+ActiveRecord::ConnectionAdapters::AbstractAdapter.class_eval do 
+  include Spectacles::SchemaStatements
 end

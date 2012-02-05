@@ -53,6 +53,31 @@ describe Spectacles::SchemaStatements do
 
     end
 
+    describe "functional" do 
+     
+      it "creates a view in the db" do 
+        
+      end
+
+    end
+
+  end
+
+  describe "#drop_view" do
+    let(:view_name) { :view_name }
+
+    describe "view_name" do
+
+      it "takes a symbol as the view_name" do 
+        TestBase.drop_view(view_name.to_sym).must_match(/#{view_name}/)
+      end
+
+      it "takes a string as the view_name" do 
+        TestBase.drop_view(view_name.to_s).must_match(/#{view_name}/)
+      end
+
+    end
+
   end
 
 end
