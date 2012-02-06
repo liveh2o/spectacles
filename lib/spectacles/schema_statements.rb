@@ -1,7 +1,7 @@
 require 'spectacles/schema_statements/abstract_adapter'
 
 module Spectacles
-  SUPPORTED_ADAPTERS = %w( Mysql PostgreSQL SQLServer SQLite )
+  SUPPORTED_ADAPTERS = %w( Mysql Mysql2 PostgreSQL SQLServer SQLite )
 
   def self.load_adapters
     SUPPORTED_ADAPTERS.each do |db|

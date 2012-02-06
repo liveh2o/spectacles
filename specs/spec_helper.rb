@@ -39,3 +39,9 @@ def load_schema
     end
   end
 end
+
+def recreate_database(config, database)
+  ActiveRecord::Base.establish_connection(config)
+  ActiveRecord::Base.connection.drop_database(database) rescue nil
+  ActiveRecord::Base.connection.create_database(database)
+end
