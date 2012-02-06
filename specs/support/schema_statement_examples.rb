@@ -26,12 +26,12 @@ shared_examples_for "an adapter" do |adapter|
       stream = StringIO.new
       ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
 
-      ActiveRecord::Base.connection.tables.each do |table|
-        ActiveRecord::Base.connection.drop_table(table)
-      end
-
       ActiveRecord::Base.connection.views.each do |view|
         ActiveRecord::Base.connection.drop_view(view)
+      end
+
+      ActiveRecord::Base.connection.tables.each do |table|
+        ActiveRecord::Base.connection.drop_table(table)
       end
 
       eval(stream.string)
