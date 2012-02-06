@@ -13,8 +13,5 @@ describe "Spectacles::SchemaStatements::PostgreSQLAdapter" do
   load_schema
 
   it_behaves_like "an adapter", "PostgreSQLAdapter"
-  
-  recreate_database("spectacles_test")
-  load_schema
   it_behaves_like "a view model"
 end
