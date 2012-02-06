@@ -15,7 +15,8 @@ module Spectacles
         query = "CREATE VIEW ? AS #{create_query}"
         query_array = [query, view_name.to_s]
 
-        return ActiveRecord::Base.__send__(:sanitize_sql_array, query_array)  
+        #return ActiveRecord::Base.__send__(:sanitize_sql_array, query_array)  
+        "CREATE VIEW #{view_name} AS #{create_query}"
       end
 
       def drop_view(view_name)
@@ -27,7 +28,8 @@ module Spectacles
         query = "DROP VIEW IF EXISTS ? "
         query_array = [query, view_name.to_s]
 
-        return ActiveRecord::Base.__send__(:sanitize_sql_array, query_array)  
+        #return ActiveRecord::Base.__send__(:sanitize_sql_array, query_array)  
+        "DROP VIEW IF EXISTS #{view_name} "
       end
 
       def views
