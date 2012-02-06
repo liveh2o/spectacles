@@ -2,6 +2,7 @@ require 'active_record'
 require 'active_support/core_ext'
 require 'spectacles/schema_statements'
 require 'spectacles/schema_dumper'
+require 'spectacles/view'
 require 'spectacles/version'
 
 ActiveRecord::ConnectionAdapters::AbstractAdapter.class_eval do

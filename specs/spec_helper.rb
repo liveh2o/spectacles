@@ -22,6 +22,8 @@ class Product < ActiveRecord::Base
   belongs_to :user
 end
 
+ActiveRecord::Schema.verbose = false
+
 def load_schema
   ActiveRecord::Schema.define(:version => 1) do
     create_table :users do |t|
