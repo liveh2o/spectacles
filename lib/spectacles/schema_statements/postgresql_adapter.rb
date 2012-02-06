@@ -27,6 +27,11 @@ module Spectacles
         
         select_value(q, name) or raise "No view called #{view} found"
       end
+      
+    private
+      def schemas
+        schema_search_path.split(/,/).map { |p| quote(p) }.join(',')
+      end
     end
   end
 end
