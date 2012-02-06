@@ -24,6 +24,10 @@ end
 
 ActiveRecord::Schema.verbose = false
 
+def configure_database(config)
+  @database_config = config
+end
+
 def load_schema
   ActiveRecord::Schema.define(:version => 1) do
     create_table :users do |t|
@@ -40,8 +44,9 @@ def load_schema
   end
 end
 
-def recreate_database(config, database)
-  ActiveRecord::Base.establish_connection(config)
+def recreate_database(database)
+  ActiveRecord::Base.establish_connection(@database_config)
   ActiveRecord::Base.connection.drop_database(database) rescue nil
   ActiveRecord::Base.connection.create_database(database)
+  ActiveRecord::Base.establish_connection(@database_config.merge(:database => database))
 end

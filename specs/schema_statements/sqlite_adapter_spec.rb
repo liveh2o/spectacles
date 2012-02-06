@@ -6,8 +6,7 @@ describe "Spectacles::SchemaStatements::SQLiteAdapter" do
   ActiveRecord::Base.establish_connection(
     :adapter => "sqlite3",
     :database => "specs/test.db"
-  )
-  
+  )  
   load_schema
 
   it_behaves_like "an adapter", "SQLiteAdapter"
