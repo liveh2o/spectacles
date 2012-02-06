@@ -10,4 +10,5 @@ describe "Spectacles::SchemaStatements::SQLiteAdapter" do
   load_schema
 
   it_behaves_like "an adapter", "SQLiteAdapter"
+  it_behaves_like "a view model"
 end

@@ -13,6 +13,7 @@ require 'minitest/pride'
 require 'support/minitest_shared'
 require 'support/minitest_matchers'
 require 'support/schema_statement_examples'
+require 'support/view_examples'
 
 class User < ActiveRecord::Base
   has_many :products

@@ -12,4 +12,5 @@ describe "Spectacles::SchemaStatements::Mysql2Adapter" do
   load_schema
 
   it_behaves_like "an adapter", "Mysql2Adapter"
+  it_behaves_like "a view model"
 end
