@@ -11,8 +11,7 @@ module Spectacles
 
       def view_build_query(view, name = nil)
         row = execute("SHOW CREATE VIEW #{view}", name).first
-        return row[1].gsub(/.*? AS/i, "")
-
+        return row[1].gsub(/CREATE .*? (AS)+/i, "")
       rescue ActiveRecord::StatementInvalid => e
         raise "No view called #{view} found"
       end
