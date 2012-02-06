@@ -1,12 +1,18 @@
 require "bundler/gem_tasks"
 require 'rake/testtask'
 
-Rake::TestTask.new do |t|
-  t.libs.push "lib"
-  t.libs.push "specs"
-  t.pattern = 'specs/**/*_spec.rb'
-  t.verbose = true
+namespace :test do
+  adapters = [:abstract, :mysql, :mysql2, :postgresql, :sqlite]
+  task :all => adapters
+
+  adapters.each do |adapter|
+    Rake::TestTask.new(adapter) do |t|
+      t.libs.push "lib"
+      t.libs.push "specs"
+      t.pattern = "specs/**/#{t.name}*_spec.rb"
+      t.verbose = true
+    end
+  end
 end
 
-task :spec => :test
-task :default => :spec
+task :default => 'test:all'
