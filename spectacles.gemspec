@@ -5,11 +5,11 @@ require "spectacles/version"
 Gem::Specification.new do |s|
   s.name        = "spectacles"
   s.version     = Spectacles::VERSION
-  s.authors     = ["Adam Hutchison"]
-  s.email       = ["adam.hutchison@moneydesktop.com"]
-  s.homepage    = ""
-  s.summary     = %q{DON'T USE THIS YET}
-  s.description = %q{Almost ready for Prime Time(TM)}
+  s.authors     = ["Adam Hutchison, Brandon Dewitt"]
+  s.email       = ["liveh2o@gmail.com, brandonsdewitt@gmail.com"]
+  s.homepage    = "http://github.com/liveh2o/spectacles"
+  s.summary     = %q{Spectacles (derived from RailsSQLViews) adds database view functionality to ActiveRecord.}
+  s.description = %q{Still working out some of the kinks. Almost ready for Prime Time(TM). If you decide to use it and have problems, please report them at github.com/liveh2o/spectactles/issues}
 
   s.rubyforge_project = "spectacles"
 

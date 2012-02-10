@@ -1,0 +1,43 @@
+= Spectacles
+
+Spectacles adds database view functionality to ActiveRecord. It is heavily inspired by Rails SQL Views (http://github.com/aeden/rails_sql_views/) and built from the ground-up to work with Rails 3+.
+
+Spectacles provides the ability to create views in migrations using a similar format to creating tables. It also provides an abstract view class that inherits from ActiveRecord::Base that can be used to create view-backed models.
+
+It currently only works with the SQLite and PostgreSQL drivers. MySQL & MySQL2 have a couple of issues that are still being worked out.
+
+= Using Spectacles
+  Install it
+    gem install spectacles        # => OR include it in your Gemfile
+
+== Migrations
+
+Create a migration from an query string:
+
+  create_view :product_users do
+    "SELECT name AS product_name, first_name AS username FROM
+    products JOIN users ON users.id = products.user_id"
+  end
+
+
+Create a migration from an ARel object:
+
+  create_view :product_users do
+    Product.select("products.name AS product_name).
+      select("users.first_name AS username").
+      join(:users)
+  end
+
+== Models
+
+  class ProductUser < Spectacles::View
+    # Add relationships
+
+    # Use scopes
+
+    # Your fancy methods
+  end
+
+= License
+
+Spectacles is licensed under MIT license (Read lib/spectactles.rb for full license)

@@ -1,1 +1,0 @@
-Add view functionality to ActiveRecord. Currently only works with the PostgreSQL driver.
