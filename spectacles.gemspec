@@ -30,11 +30,11 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "minitest"
 
   if defined?(JRUBY_VERSION)
-    gem.platform = 'java'
-
     gem.add_development_dependency "activerecord-jdbcmysql-adapter"
     gem.add_development_dependency "activerecord-jdbcpostgresql-adapter"
     gem.add_development_dependency "activerecord-jdbcsqlite3-adapter"
+    
+    gem.platform = Gem::Platform.new('java')
   else
     gem.add_development_dependency "mysql"
     gem.add_development_dependency "mysql2"
