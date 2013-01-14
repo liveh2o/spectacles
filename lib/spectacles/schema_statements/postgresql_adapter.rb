@@ -13,7 +13,7 @@ module Spectacles
            AND table_type = 'VIEW'
         SQL
         
-        query(q, name).map { |row| row[0] }
+        execute(q, name).map { |row| row['table_name'] }
       end
 
       def view_build_query(view, name = nil)
