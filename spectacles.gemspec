@@ -1,31 +1,44 @@
 # -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "spectacles/version"
 
-Gem::Specification.new do |s|
-  s.name        = "spectacles"
-  s.version     = Spectacles::VERSION
-  s.authors     = ["Adam Hutchison, Brandon Dewitt"]
-  s.email       = ["liveh2o@gmail.com, brandonsdewitt@gmail.com"]
-  s.homepage    = "http://github.com/liveh2o/spectacles"
-  s.summary     = %q{Spectacles (derived from RailsSQLViews) adds database view functionality to ActiveRecord.}
-  s.description = %q{Still working out some of the kinks. Almost ready for Prime Time(TM). If you decide to use it and have problems, please report them at github.com/liveh2o/spectactles/issues}
+Gem::Specification.new do |gem|
+  gem.version     = Spectacles::VERSION
+  gem.name        = "spectacles"
+  gem.authors     = ["Adam Hutchison, Brandon Dewitt"]
+  gem.email       = ["liveh2o@gmail.com, brandonsdewitt@gmail.com"]
+  gem.homepage    = "http://github.com/liveh2o/spectacles"
+  gem.summary     = %q{Spectacles (derived from RailsSQLViews) adds database view functionality to ActiveRecord.}
+  gem.description = %q{Still working out some of the kinks. Almost ready for Prime Time(TM). If you decide to use it and have problems, please report them at github.com/liveh2o/spectactles/issues}
 
-  s.rubyforge_project = "spectacles"
+  gem.files         = `git ls-files`.split($\)
+  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
+  gem.require_paths = ["lib"]
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-  s.require_paths = ["lib"]
+  ##
+  # Dependencies
+  #
+  gem.add_dependency "activerecord"
+  gem.add_dependency "activesupport"
 
-  # specify any dependencies here; for example:
-  s.add_development_dependency "minitest"
-  s.add_development_dependency "mysql"
-  s.add_development_dependency "mysql2"
-  s.add_development_dependency "pg"
-  s.add_development_dependency "rake"
-  s.add_development_dependency "sqlite3-ruby"
+  ##
+  # Development dependencies
+  #
+  gem.add_development_dependency "rake"
+  gem.add_development_dependency "minitest"
 
-  s.add_runtime_dependency "activerecord"
-  s.add_runtime_dependency "activesupport"
+  if defined?(JRUBY_VERSION)
+    gem.platform = 'java'
+
+    gem.add_development_dependency "activerecord-jdbcmysql-adapter"
+    gem.add_development_dependency "activerecord-jdbcpostgresql-adapter"
+    gem.add_development_dependency "activerecord-jdbcsqlite3-adapter"
+  else
+    gem.add_development_dependency "mysql"
+    gem.add_development_dependency "mysql2"
+    gem.add_development_dependency "pg"
+    gem.add_development_dependency "sqlite3-ruby"
+  end
 end
