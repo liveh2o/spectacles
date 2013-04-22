@@ -1,8 +1,10 @@
 module Spectacles
   module SchemaDumper
     def self.dump_views(stream, connection)
-      connection.views.each do |view|
-        dump_view(stream, connection, view)
+      unless (Spectacles.config.enable_schema_dump == false)
+        connection.views.sort.each do |view|
+          dump_view(stream, connection, view)
+        end
       end
     end
 
