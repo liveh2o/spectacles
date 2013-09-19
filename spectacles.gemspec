@@ -20,8 +20,8 @@ Gem::Specification.new do |gem|
   ##
   # Dependencies
   #
-  gem.add_dependency "activerecord"
-  gem.add_dependency "activesupport"
+  gem.add_dependency "activerecord", ">= 4.0.0"
+  gem.add_dependency "activesupport", ">= 4.0.0"
 
   ##
   # Development dependencies
@@ -33,9 +33,10 @@ Gem::Specification.new do |gem|
     gem.add_development_dependency "activerecord-jdbcmysql-adapter"
     gem.add_development_dependency "activerecord-jdbcpostgresql-adapter"
     gem.add_development_dependency "activerecord-jdbcsqlite3-adapter"
-    
+
     gem.platform = Gem::Platform.new('java')
   else
+    gem.add_development_dependency "pry-debugger"
     gem.add_development_dependency "mysql"
     gem.add_development_dependency "mysql2"
     gem.add_development_dependency "pg"

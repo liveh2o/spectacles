@@ -2,8 +2,8 @@ require "bundler/gem_tasks"
 require 'rake/testtask'
 
 namespace :test do
-  adapters = [:mysql, :mysql2, :postgresql, :sqlite]
-  task :all => [:spectacles] + adapters
+  adapters = [ :mysql, :mysql2, :postgresql, :sqlite, :sqlite3 ]
+  task :all => [ :spectacles ] + adapters
 
   adapters.each do |adapter|
     Rake::TestTask.new(adapter) do |t|
@@ -13,7 +13,7 @@ namespace :test do
       t.verbose = true
     end
   end
-  
+
   Rake::TestTask.new(:spectacles) do |t|
     t.libs.push "lib"
     t.libs.push "specs"
