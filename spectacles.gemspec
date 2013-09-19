@@ -28,18 +28,4 @@ Gem::Specification.new do |gem|
   #
   gem.add_development_dependency "rake"
   gem.add_development_dependency "minitest"
-
-  if defined?(JRUBY_VERSION)
-    gem.add_development_dependency "activerecord-jdbcmysql-adapter"
-    gem.add_development_dependency "activerecord-jdbcpostgresql-adapter"
-    gem.add_development_dependency "activerecord-jdbcsqlite3-adapter"
-
-    gem.platform = Gem::Platform.new('java')
-  else
-    gem.add_development_dependency "pry-debugger"
-    gem.add_development_dependency "mysql"
-    gem.add_development_dependency "mysql2"
-    gem.add_development_dependency "pg"
-    gem.add_development_dependency "sqlite3"
-  end
 end
