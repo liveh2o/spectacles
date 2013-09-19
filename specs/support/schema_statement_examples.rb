@@ -49,11 +49,11 @@ shared_examples_for "an adapter" do |adapter|
 
     describe "view_name" do
       it "takes a symbol as the view_name" do 
-        shared_base.create_view(view_name.to_sym, Product.scoped).must_match(/#{view_name}/)
+        shared_base.create_view(view_name.to_sym, Product.all).must_match(/#{view_name}/)
       end
 
       it "takes a string as the view_name" do 
-        shared_base.create_view(view_name.to_s, Product.scoped).must_match(/#{view_name}/)
+        shared_base.create_view(view_name.to_s, Product.all).must_match(/#{view_name}/)
       end
     end
 
@@ -64,15 +64,15 @@ shared_examples_for "an adapter" do |adapter|
       end
 
       it "uses an Arel::Relation if passed" do 
-        select_statement = Product.scoped.to_sql
-        shared_base.create_view(view_name, Product.scoped).must_match(/#{Regexp.escape(select_statement)}/)
+        select_statement = Product.all.to_sql
+        shared_base.create_view(view_name, Product.all).must_match(/#{Regexp.escape(select_statement)}/)
       end
     end
 
     describe "block" do 
       it "can use an Arel::Relation from the yield" do 
-        select_statement = Product.scoped.to_sql
-        shared_base.create_view(view_name) { Product.scoped }.must_match(/#{Regexp.escape(select_statement)}/)
+        select_statement = Product.all.to_sql
+        shared_base.create_view(view_name) { Product.all }.must_match(/#{Regexp.escape(select_statement)}/)
       end
 
       it "can use a String from the yield" do 
