@@ -10,7 +10,7 @@ module Spectacles
 
     def self.dump_view(stream, connection, view_name)
       stream.print <<-CREATEVIEW
-  create_view :#{view_name} do
+  create_view :#{view_name}, :force => true do
     "#{connection.view_build_query(view_name)}"
   end
       CREATEVIEW
