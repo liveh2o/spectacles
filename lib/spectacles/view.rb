@@ -11,6 +11,13 @@ module Spectacles
       alias_method :view_name, :table_name
     end
 
+    def ==(comparison_object)
+      super ||
+        comparison_object.instance_of?(self.class) &&
+        attributes.present? &&
+        comparison_object.attributes == attributes
+    end
+
     def readonly?
       true
     end
