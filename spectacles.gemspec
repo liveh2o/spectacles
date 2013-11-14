@@ -11,6 +11,7 @@ Gem::Specification.new do |gem|
   gem.homepage    = "http://github.com/liveh2o/spectacles"
   gem.summary     = %q{Spectacles (derived from RailsSQLViews) adds database view functionality to ActiveRecord.}
   gem.description = %q{Still working out some of the kinks. Almost ready for Prime Time(TM). If you decide to use it and have problems, please report them at github.com/liveh2o/spectactles/issues}
+  gem.license     = 'MIT'
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
