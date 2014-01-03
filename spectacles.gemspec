@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email       = ["liveh2o@gmail.com, brandonsdewitt@gmail.com"]
   gem.homepage    = "http://github.com/liveh2o/spectacles"
   gem.summary     = %q{Spectacles (derived from RailsSQLViews) adds database view functionality to ActiveRecord.}
-  gem.description = %q{Still working out some of the kinks. Almost ready for Prime Time(TM). If you decide to use it and have problems, please report them at github.com/liveh2o/spectactles/issues}
+  gem.description = %q{Spectacles adds database view functionality to ActiveRecord. Current supported adapters include Postgres, SQLite and Vertica (MySQL is close).}
   gem.license     = 'MIT'
 
   gem.files         = `git ls-files`.split($\)
