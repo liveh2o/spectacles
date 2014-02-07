@@ -7,7 +7,7 @@ shared_examples_for "a view model" do
   end
 
   class NewProductUser < Spectacles::View
-    scope :duck_lovers, where(:product_name => 'Rubber Duck')
+    scope :duck_lovers, lambda { where(:product_name => 'Rubber Duck') }
   end
 
   describe "Spectacles::View" do
