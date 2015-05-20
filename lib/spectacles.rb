@@ -40,4 +40,13 @@ ActiveRecord::SchemaDumper.class_eval do
   end
 end
 
+ActiveRecord::ConnectionAdapters::SchemaStatements.class_eval do
+  alias_method(:_spectacle_drop_table, :drop_table) if method_defined?(:drop_table)
+
+  # Add this so that views get cleaned up properly
+  def drop_table(name, options={})
+    execute "DROP TABLE #{name} CASCADE"
+  end
+end
+
 Spectacles::load_adapters
