@@ -51,12 +51,19 @@ module Spectacles
       # to construct the view, and hash contains the options given when
       # the view was created.
       def materialized_view_build_query(view, name = nil)
-        storage = select_value("SELECT reloptions FROM pg_class WHERE relname=#{quote(view)}", name)
-        rows = execute("SELECT tablespace, ispopulated, definition FROM pg_matviews WHERE matviewname=#{quote(view)}", name);
+        result = execute <<-SQL.squish, name
+          SELECT a.reloptions, b.tablespace, b.ispopulated, b.definition
+            FROM pg_class a, pg_matviews b
+           WHERE a.relname=#{quote(view)}
+             AND b.matviewname=a.relname
+        SQL
 
-        tablespace = rows[0]["tablespace"]
-        ispopulated = rows[0]["ispopulated"]
-        definition = rows[0]["definition"].strip.sub(/;$/, "")
+        row = result[0]
+
+        storage = row["reloptions"]
+        tablespace = row["tablespace"]
+        ispopulated = row["ispopulated"]
+        definition = row["definition"].strip.sub(/;$/, "")
 
         options = {}
         options[:data] = false if ispopulated == 'f'
