@@ -50,7 +50,7 @@ describe "Spectacles::SchemaStatements::PostgreSQLAdapter" do
     it "should allow storage parameters to be specified" do
       query = test_base.create_materialized_view_statement(:view_name, "select_query_here",
         storage: { bats_in_belfry: true, max_wingspan: 15 })
-      query.must_match(/create materialized view view_name with bats_in_belfry=true, max_wingspan=15 as select_query_here with data/i)
+      query.must_match(/create materialized view view_name with \(bats_in_belfry=true, max_wingspan=15\) as select_query_here with data/i)
     end
 
     it "should allow tablespace to be specified" do

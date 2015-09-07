@@ -16,6 +16,18 @@ shared_examples_for "an adapter" do |adapter|
         "SELECT name AS product_name, first_name AS username FROM
         products JOIN users ON users.id = products.user_id"
       end
+
+      if ActiveRecord::Base.connection.supports_materialized_views?
+        ActiveRecord::Base.connection.create_materialized_view(:materialized_product_users, force: true) do 
+          "SELECT name AS product_name, first_name AS username FROM
+          products JOIN users ON users.id = products.user_id"
+        end
+
+        ActiveRecord::Base.connection.create_materialized_view(:empty_materialized_product_users, storage: { fillfactor: 50 }, data: false, force: true) do 
+          "SELECT name AS product_name, first_name AS username FROM
+          products JOIN users ON users.id = products.user_id"
+        end
+      end
     end
 
     it "should return create_view in dump stream" do 
@@ -24,9 +36,30 @@ shared_examples_for "an adapter" do |adapter|
       stream.string.must_match(/create_view/)
     end
 
-    it "should return create_view in dump stream" do 
+    if ActiveRecord::Base.connection.supports_materialized_views?
+      it "should return create_materialized_view in dump stream" do 
+        stream = StringIO.new
+        ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
+        stream.string.must_match(/create_materialized_view/)
+      end
+
+      it "should include options for create_materialized_view" do
+        stream = StringIO.new
+        ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
+        stream.string.must_match(/create_materialized_view.*fillfactor: 50/)
+        stream.string.must_match(/create_materialized_view.*data: false/)
+      end
+    end
+
+    it "should rebuild views in dump stream" do 
       stream = StringIO.new
       ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
+
+      if ActiveRecord::Base.connection.supports_materialized_views?
+        ActiveRecord::Base.connection.materialized_views.each do |view|
+          ActiveRecord::Base.connection.drop_materialized_view(view)
+        end
+      end
 
       ActiveRecord::Base.connection.views.each do |view|
         ActiveRecord::Base.connection.drop_view(view)
@@ -37,8 +70,12 @@ shared_examples_for "an adapter" do |adapter|
       end
 
       eval(stream.string)
-      
+
       ActiveRecord::Base.connection.views.must_include('new_product_users')
+
+      if ActiveRecord::Base.connection.supports_materialized_views?
+        ActiveRecord::Base.connection.materialized_views.must_include('materialized_product_users')
+      end
     end
   end
 

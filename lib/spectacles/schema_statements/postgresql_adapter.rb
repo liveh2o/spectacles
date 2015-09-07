@@ -33,6 +33,39 @@ module Spectacles
         true
       end
 
+      def materialized_views(name = nil)
+        query = <<-SQL.squish
+          SELECT relname
+            FROM pg_class
+           WHERE relnamespace IN (
+                    SELECT oid
+                      FROM pg_namespace
+                     WHERE nspname = ANY(current_schemas(false)))
+             AND relkind = 'm';
+        SQL
+
+        execute(query, name).map { |row| row['relname'] }
+      end
+
+      # Returns a tuple [string, hash], where string is the query used
+      # to construct the view, and hash contains the options given when
+      # the view was created.
+      def materialized_view_build_query(view, name = nil)
+        storage = select_value("SELECT reloptions FROM pg_class WHERE relname=#{quote(view)}", name)
+        rows = execute("SELECT tablespace, ispopulated, definition FROM pg_matviews WHERE matviewname=#{quote(view)}", name);
+
+        tablespace = rows[0]["tablespace"]
+        ispopulated = rows[0]["ispopulated"]
+        definition = rows[0]["definition"].strip.sub(/;$/, "")
+
+        options = {}
+        options[:data] = false if ispopulated == 'f'
+        options[:storage] = parse_storage_definition(storage) if storage.present?
+        options[:tablespace] = tablespace if tablespace.present?
+
+        [definition, options]
+      end
+
       def create_materialized_view_statement(view_name, query, options={})
         columns = if options[:columns]
             "(" + options[:columns].map { |c| quote_column_name(c) }.join(",") + ")"
@@ -41,7 +74,7 @@ module Spectacles
           end
 
         storage = if options[:storage] && options[:storage].any?
-            "WITH " + options[:storage].map { |key, value| "#{key}=#{value}" }.join(", ")
+            "WITH (" + options[:storage].map { |key, value| "#{key}=#{value}" }.join(", ") + ")"
           else
             ""
           end
@@ -91,6 +124,15 @@ module Spectacles
 
       def refresh_materialized_view(view_name)
         execute "REFRESH MATERIALIZED VIEW #{quote_table_name(view_name)}"
+      end
+
+      def parse_storage_definition(storage)
+        storage = storage.gsub(/^{|}$/, "")
+        storage.split(/,/).inject({}) do |hash, item|
+          key, value = item.strip.split(/=/)
+          hash[key.to_sym] = value
+          hash
+        end
       end
     end
   end
