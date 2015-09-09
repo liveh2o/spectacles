@@ -20,9 +20,11 @@ module Spectacles
 
     def self.dump_view(stream, connection, view_name)
       stream.print <<-CREATEVIEW
+
   create_view :#{view_name}, :force => true do
     "#{connection.view_build_query(view_name)}"
   end
+
       CREATEVIEW
     end
 
@@ -31,8 +33,11 @@ module Spectacles
       options[:force] = true
 
       stream.print <<-CREATEVIEW
+
   create_materialized_view #{view_name.to_sym.inspect}, #{format_option_hash(options)} do
-    #{definition.inspect}
+    <<-SQL
+      #{definition}
+    SQL
   end
       CREATEVIEW
     end
