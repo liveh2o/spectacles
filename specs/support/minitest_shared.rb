@@ -12,9 +12,8 @@ module MiniTest::Spec::SharedExamples
   end
 
   def it_behaves_like(desc, *args)
-    self.instance_eval do
-      MiniTest::Spec.shared_examples[desc].call(*args)
-    end
+    examples = MiniTest::Spec.shared_examples[desc]
+    instance_exec(*args, &examples)
   end
 end
 
