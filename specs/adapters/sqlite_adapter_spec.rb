@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'spectacles/schema_statements/sqlite_adapter'
 
 describe "Spectacles::SchemaStatements::SQLiteAdapter" do
   File.delete(File.expand_path(File.dirname(__FILE__) + "/../test.db")) rescue nil

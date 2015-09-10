@@ -1,9 +1,11 @@
 require 'spectacles/schema_statements/abstract_adapter'
+require 'spectacles/schema_statements/sqlite_backports'
 
 module Spectacles
   module SchemaStatements
     module SQLite3Adapter
       include Spectacles::SchemaStatements::AbstractAdapter
+      include Spectacles::SchemaStatements::SqliteBackports
 
       def generate_view_query(*columns)
         sql = <<-SQL
