@@ -10,7 +10,7 @@ module Spectacles
       if ActiveRecord::ConnectionAdapters.const_defined?(adapter_class)
         require "spectacles/schema_statements/#{db.downcase}_adapter"
         ActiveRecord::ConnectionAdapters.const_get(adapter_class).class_eval do
-          prepend Spectacles::SchemaStatements.const_get(adapter_class)
+          include Spectacles::SchemaStatements.const_get(adapter_class)
         end
       end
     end

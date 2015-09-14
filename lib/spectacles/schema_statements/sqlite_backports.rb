@@ -4,7 +4,7 @@ module Spectacles
 
       # copied from ActiveRecord, because the sqlite3 adapter in AR
       # tries to return both tables AND views with this method.
-      def tables(name = nil, table_name = nil) #:nodoc:
+      def tables_without_views(name = nil, table_name = nil) #:nodoc:
         sql = <<-SQL
           SELECT name
           FROM sqlite_master
