@@ -4,7 +4,7 @@ Spectacles adds database view functionality to ActiveRecord. It is heavily inspi
 
 Spectacles provides the ability to create views in migrations using a similar format to creating tables. It also provides an abstract view class that inherits from ActiveRecord::Base that can be used to create view-backed models.
 
-It currently only works with the SQLite, PostgreSQL, and Vertica drivers. MySQL & MySQL2 have a couple of issues that are still being worked out.
+It currently works with the SQLite, MySQL, MySQL2, PostgreSQL, and Vertica drivers.
 
 = Using Spectacles
   Install it
