@@ -1,3 +1,3 @@
 module Spectacles
-  VERSION = "0.6.0"
+  VERSION = "1.0.0"
 end
