@@ -3,6 +3,7 @@ require 'active_support/core_ext'
 require 'spectacles/schema_statements'
 require 'spectacles/schema_dumper'
 require 'spectacles/view'
+require 'spectacles/materialized_view'
 require 'spectacles/version'
 require 'spectacles/configuration'
 
@@ -36,6 +37,7 @@ ActiveRecord::SchemaDumper.class_eval do
 
   def trailer(stream)
     ::Spectacles::SchemaDumper.dump_views(stream, @connection)
+    ::Spectacles::SchemaDumper.dump_materialized_views(stream, @connection)
     _spectacles_orig_trailer(stream)
   end
 end

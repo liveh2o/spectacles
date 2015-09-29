@@ -46,6 +46,34 @@ module Spectacles
       def views
         raise "Override view for your db adapter in #{self.class}"
       end
+
+      def supports_materialized_views?
+        false
+      end
+
+      def materialized_view_exists?(name)
+        return materialized_views.include?(name.to_s)
+      end
+
+      def materialized_views
+        raise NotImplementedError, "Override materialized_views for your db adapter in #{self.class}"
+      end
+
+      def materialized_view_build_query(view_name)
+        raise NotImplementedError, "Override materialized_view_build_query for your db adapter in #{self.class}"
+      end
+
+      def create_materialized_view(view_name, *args)
+        raise NotImplementedError, "Override create_materialized_view for your db adapter in #{self.class}"
+      end
+
+      def drop_materialized_view(view_name)
+        raise NotImplementedError, "Override drop_materialized_view for your db adapter in #{self.class}"
+      end
+
+      def refresh_materialized_view(view_name)
+        raise NotImplementedError, "Override refresh_materialized_view for your db adapter in #{self.class}"
+      end
     end
   end
 end
