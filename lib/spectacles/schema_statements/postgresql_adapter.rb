@@ -134,6 +134,10 @@ module Spectacles
       end
 
       def parse_storage_definition(storage)
+        # JRuby 9000 returns storage as an Array, whereas
+        # MRI returns a string.
+        storage = storage.first if storage.is_a?(Array)
+
         storage = storage.gsub(/^{|}$/, "")
         storage.split(/,/).inject({}) do |hash, item|
           key, value = item.strip.split(/=/)
