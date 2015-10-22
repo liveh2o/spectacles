@@ -23,6 +23,8 @@ shared_examples_for "an adapter" do |adapter|
           products JOIN users ON users.id = products.user_id"
         end
 
+        ActiveRecord::Base.connection.add_index :materialized_product_users, :product_name
+
         ActiveRecord::Base.connection.create_materialized_view(:empty_materialized_product_users, storage: { fillfactor: 50 }, data: false, force: true) do 
           "SELECT name AS product_name, first_name AS username FROM
           products JOIN users ON users.id = products.user_id"
@@ -41,6 +43,12 @@ shared_examples_for "an adapter" do |adapter|
         stream = StringIO.new
         ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
         stream.string.must_match(/create_materialized_view/)
+      end
+
+      it 'should return add_index in dump stream' do
+        stream = StringIO.new
+        ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
+        stream.string.must_match(/add_index/)
       end
 
       it "should include options for create_materialized_view" do
