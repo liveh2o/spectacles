@@ -77,5 +77,11 @@ describe Spectacles::SchemaStatements::AbstractAdapter do
       lambda { TestBase.refresh_materialized_view(:books) }.must_raise(NotImplementedError)
     end
   end
+  
+  describe "#refresh_materialized_view_concurrently" do
+    it "throws error when accessed on AbstractAdapter" do
+      lambda { TestBase.refresh_materialized_view_concurrently(:books) }.must_raise(NotImplementedError)
+    end
+  end
 
 end

@@ -133,6 +133,10 @@ module Spectacles
         execute "REFRESH MATERIALIZED VIEW #{quote_table_name(view_name)}"
       end
 
+      def refresh_materialized_view_concurrently(view_name)
+        execute "REFRESH MATERIALIZED VIEW CONCURRENTLY #{quote_table_name(view_name)}"
+      end
+
       def parse_storage_definition(storage)
         # JRuby 9000 returns storage as an Array, whereas
         # MRI returns a string.
