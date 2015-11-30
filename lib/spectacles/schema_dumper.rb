@@ -8,11 +8,12 @@ module Spectacles
       end
     end
 
-    def self.dump_materialized_views(stream, connection)
+    def self.dump_materialized_views(dumper, stream, connection)
       unless (Spectacles.config.enable_schema_dump == false)
         if connection.supports_materialized_views?
           connection.materialized_views.sort.each do |view|
             dump_materialized_view(stream, connection, view)
+            dumper.send(:indexes, view, stream)
           end
         end
       end

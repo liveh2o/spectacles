@@ -37,7 +37,7 @@ ActiveRecord::SchemaDumper.class_eval do
 
   def trailer(stream)
     ::Spectacles::SchemaDumper.dump_views(stream, @connection)
-    ::Spectacles::SchemaDumper.dump_materialized_views(stream, @connection)
+    ::Spectacles::SchemaDumper.dump_materialized_views(self, stream, @connection)
     _spectacles_orig_trailer(stream)
   end
 end
