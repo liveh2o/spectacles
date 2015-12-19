@@ -6,6 +6,7 @@ require 'spectacles/view'
 require 'spectacles/materialized_view'
 require 'spectacles/version'
 require 'spectacles/configuration'
+require 'spectacles/abstract_adapter_override'
 
 require 'spectacles/railtie' if defined?(Rails)
 
@@ -20,15 +21,6 @@ module Spectacles
 
   class << self
     alias_method :config, :configuration
-  end
-end
-
-ActiveRecord::ConnectionAdapters::AbstractAdapter.class_eval do
-  alias_method(:_spectacles_original_inherited, :inherited) if method_defined?(:inherited)
-
-  def self.inherited(klass)
-    ::Spectacles::load_adapters
-    _spectacles_orig_inherited if method_defined?(:_spectacles_original_inherited)
   end
 end
 
