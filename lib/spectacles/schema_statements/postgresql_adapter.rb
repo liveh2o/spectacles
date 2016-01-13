@@ -149,7 +149,7 @@ module Spectacles
       end
 
       def database_username
-        ::ActiveRecord::Base.configurations["defaults"]["username"]
+        @config[:username]
       end
     end
   end
