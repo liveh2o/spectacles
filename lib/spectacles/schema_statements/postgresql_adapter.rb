@@ -7,10 +7,12 @@ module Spectacles
 
       def views(name = nil) #:nodoc:
         q = <<-SQL
-        SELECT table_name, table_type
-          FROM information_schema.tables
-         WHERE table_schema = ANY(current_schemas(false))
-           AND table_type = 'VIEW'
+              SELECT t.table_name, t.table_type
+                FROM information_schema.tables AS t
+          INNER JOIN pg_class AS c ON c.relname = t.table_name
+               WHERE t.table_schema = ANY(current_schemas(false))
+                 AND t.table_type = 'VIEW'
+                 AND pg_catalog.pg_get_userbyid(c.relowner) = #{quote(database_username)}
         SQL
 
         execute(q, name).map { |row| row['table_name'] }
@@ -144,6 +146,10 @@ module Spectacles
           hash[key.to_sym] = value
           hash
         end
+      end
+
+      def database_username
+        ::ActiveRecord::Base.configurations["defaults"]["username"]
       end
     end
   end
