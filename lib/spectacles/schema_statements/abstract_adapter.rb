@@ -74,6 +74,10 @@ module Spectacles
       def refresh_materialized_view(view_name)
         raise NotImplementedError, "Override refresh_materialized_view for your db adapter in #{self.class}"
       end
+      
+      def refresh_materialized_view_concurrently(view_name)
+        raise NotImplementedError, "Override refresh_materialized_view_concurrently for your db adapter in #{self.class}"
+      end
     end
   end
 end
