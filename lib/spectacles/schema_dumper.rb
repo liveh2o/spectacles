@@ -1,17 +1,19 @@
 module Spectacles
   module SchemaDumper
     def self.dump_views(stream, connection)
-      unless (Spectacles.config.enable_schema_dump == false)
+      unless Spectacles.config.enable_schema_dump == false
         connection.views.sort.each do |view|
+          next if skip_view?(view)
           dump_view(stream, connection, view)
         end
       end
     end
 
     def self.dump_materialized_views(dumper, stream, connection)
-      unless (Spectacles.config.enable_schema_dump == false)
+      unless Spectacles.config.enable_schema_dump == false
         if connection.supports_materialized_views?
           connection.materialized_views.sort.each do |view|
+            next if skip_view?(view)
             dump_materialized_view(stream, connection, view)
             dumper.send(:indexes, view, stream)
           end
@@ -46,7 +48,7 @@ module Spectacles
     def self.format_option_hash(hash)
       hash.map do |key, value|
         "#{key}: #{format_option_value(value)}"
-      end.join(", ")
+      end.join(', ')
     end
 
     def self.format_option_value(value)
@@ -57,6 +59,10 @@ module Spectacles
       when true, false then value.inspect
       else raise "can't format #{value.inspect}"
       end
+    end
+
+    def self.skip_view?(view)
+      Spectacles.config.skip_views.any? { |item| item === view }
     end
   end
 end
