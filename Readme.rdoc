@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/liveh2o/spectacles.svg?branch=master)](https://travis-ci.org/liveh2o/spectacles)
+
 = Spectacles
 
 Spectacles adds database view functionality to ActiveRecord. It is heavily inspired by Rails SQL Views (http://github.com/aeden/rails_sql_views/) and built from the ground-up to work with Rails 3.2+.
