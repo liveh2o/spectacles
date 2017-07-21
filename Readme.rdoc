@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/liveh2o/spectacles.svg?branch=master)](https://travis-ci.org/liveh2o/spectacles)
+{<img src="https://travis-ci.org/liveh2o/spectacles.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/liveh2o/spectacles]
 
 = Spectacles
 
