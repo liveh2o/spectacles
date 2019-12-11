@@ -14,6 +14,10 @@ module Spectacles
       self.connection.refresh_materialized_view(self.view_name)
     end
 
+    def self.refresh_concurrently!
+      self.connection.refresh_materialized_view_concurrently(self.view_name)
+    end
+
     class << self
       alias_method :table_exists?, :materialized_view_exists?
       alias_method :view_name, :table_name
