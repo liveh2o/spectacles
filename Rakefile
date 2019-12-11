@@ -2,7 +2,7 @@ require "bundler/gem_tasks"
 require 'rake/testtask'
 
 namespace :test do
-  adapters = [ :mysql, :mysql2, :postgresql, :sqlite3 ]
+  adapters = [ :mysql2, :postgresql, :sqlite3 ]
   task :all => [ :spectacles ] + adapters
 
   adapters.each do |adapter|
