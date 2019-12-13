@@ -68,7 +68,7 @@ module Spectacles
         definition = row["definition"].strip.sub(/;$/, "")
 
         options = {}
-        options[:data] = false if ispopulated == 'f'
+        options[:data] = false if ispopulated == 'f' || ispopulated == false
         options[:storage] = parse_storage_definition(storage) if storage.present?
         options[:tablespace] = tablespace if tablespace.present?
 
