@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 shared_examples_for "a view model" do
   ActiveRecord::Base.connection.create_view(:new_product_users) do
     "SELECT name AS product_name, first_name AS username FROM

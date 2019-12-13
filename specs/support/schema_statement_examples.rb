@@ -1,5 +1,3 @@
-require "spec_helper"
-
 shared_examples_for "an adapter" do |adapter|
   shared_base = Class.new do
     extend Spectacles::SchemaStatements.const_get(adapter)
