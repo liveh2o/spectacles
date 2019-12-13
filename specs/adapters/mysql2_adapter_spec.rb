@@ -6,7 +6,7 @@ describe "Spectacles::SchemaStatements::Mysql2Adapter" do
     :host => "localhost",
     :username => "root"
   }
-  
+
   configure_database(config)
   recreate_database("spectacles_test")
   load_schema
