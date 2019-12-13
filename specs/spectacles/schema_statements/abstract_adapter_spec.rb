@@ -5,6 +5,7 @@ describe Spectacles::SchemaStatements::AbstractAdapter do
     extend Spectacles::SchemaStatements::AbstractAdapter
 
     def self.materialized_views
+      @materialized_views ||= nil
       @materialized_views || super
     end
 
