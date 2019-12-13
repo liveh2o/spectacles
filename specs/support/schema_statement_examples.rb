@@ -18,6 +18,9 @@ shared_examples_for "an adapter" do |adapter|
       end
 
       if ActiveRecord::Base.connection.supports_materialized_views?
+        ActiveRecord::Base.connection.drop_materialized_view(:materialized_product_users)
+        ActiveRecord::Base.connection.drop_materialized_view(:empty_materialized_product_users)
+
         ActiveRecord::Base.connection.create_materialized_view(:materialized_product_users, force: true) do 
           "SELECT name AS product_name, first_name AS username FROM
           products JOIN users ON users.id = products.user_id"
@@ -25,7 +28,7 @@ shared_examples_for "an adapter" do |adapter|
 
         ActiveRecord::Base.connection.add_index :materialized_product_users, :product_name
 
-        ActiveRecord::Base.connection.create_materialized_view(:empty_materialized_product_users, storage: { fillfactor: 50 }, data: false, force: true) do 
+        ActiveRecord::Base.connection.create_materialized_view(:empty_materialized_product_users, storage: { fillfactor: 50 }, data: false, force: true) do
           "SELECT name AS product_name, first_name AS username FROM
           products JOIN users ON users.id = products.user_id"
         end
