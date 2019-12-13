@@ -18,12 +18,12 @@ shared_examples_for "a view model" do
         @john = User.create(:first_name => 'John', :last_name => 'Doe')
         @john.products.create(:name => 'Rubber Duck', :value => 10)
 
-        NewProductUser.duck_lovers.load.first.username.must_be @john.first_name
+        _(NewProductUser.duck_lovers.load.first.username).must_be @john.first_name
       end
 
       describe "an instance" do
         it "is readonly" do
-          NewProductUser.new.readonly?.must_be true
+          _(NewProductUser.new.readonly?).must_be true
         end
       end
     end
@@ -49,11 +49,11 @@ shared_examples_for "a view model" do
       end
 
       it "can has scopes" do
-        MaterializedProductUser.duck_lovers.load.first.username.must_be @john.first_name
+        _(MaterializedProductUser.duck_lovers.load.first.username).must_be @john.first_name
       end
 
       it "is readonly" do
-        MaterializedProductUser.first.readonly?.must_be true
+        _(MaterializedProductUser.first.readonly?).must_be true
       end
     end
   end
