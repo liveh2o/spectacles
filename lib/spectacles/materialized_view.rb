@@ -3,7 +3,7 @@ module Spectacles
     self.abstract_class = true
 
     def self.new(*)
-      raise NotImplementedError
+      raise NotImplementedError, "#{self} is an abstract class and cannot be instantiated."
     end
 
     def self.materialized_view_exists?
