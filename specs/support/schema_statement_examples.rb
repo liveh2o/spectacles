@@ -144,6 +144,23 @@ shared_examples_for "an adapter" do |adapter|
     end
   end
 
+  describe "#tables" do
+    it "returns an array of all table names" do
+      _(ActiveRecord::Base.connection.tables).must_include("products")
+      _(ActiveRecord::Base.connection.tables).must_include("users")
+    end
+
+    it "does not include the names of the views" do
+      _(ActiveRecord::Base.connection.tables).wont_include("new_product_users")
+    end
+  end
+
+  describe "#views" do
+    it "returns an array of all views" do
+      _(ActiveRecord::Base.connection.views).must_include("new_product_users")
+    end
+  end
+
   if shared_base.supports_materialized_views?
     describe "#create_materialized_view" do
       let(:view_name) { :view_name }
