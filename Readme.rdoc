@@ -1,4 +1,4 @@
-{<img src="https://travis-ci.org/liveh2o/spectacles.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/liveh2o/spectacles]
+{<img src="https://travis-ci.org/liveh2o/spectacles.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/liveh2o/spectacles] {<img src="https://badge.fury.io/rb/spectacles.svg" alt="Gem Version" />}[https://badge.fury.io/rb/spectacles]
 
 = Spectacles
 
