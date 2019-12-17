@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 shared_examples_for "a view model" do
   ActiveRecord::Base.connection.create_view(:new_product_users) do
     "SELECT name AS product_name, first_name AS username FROM
@@ -12,18 +10,22 @@ shared_examples_for "a view model" do
 
   describe "Spectacles::View" do
     describe "inherited class" do
-      it "can has scopes" do
+      before(:each) do
         User.destroy_all
         Product.destroy_all
         @john = User.create(:first_name => 'John', :last_name => 'Doe')
         @john.products.create(:name => 'Rubber Duck', :value => 10)
+      end
 
-        NewProductUser.duck_lovers.load.first.username.must_be @john.first_name
+      let(:new_product_user) { NewProductUser.duck_lovers.load.first }
+
+      it "can have scopes" do
+        _(new_product_user.username).must_be @john.first_name
       end
 
       describe "an instance" do
         it "is readonly" do
-          NewProductUser.new.readonly?.must_be true
+          _(new_product_user.readonly?).must_be true
         end
       end
     end
@@ -48,12 +50,12 @@ shared_examples_for "a view model" do
         MaterializedProductUser.refresh!
       end
 
-      it "can has scopes" do
-        MaterializedProductUser.duck_lovers.load.first.username.must_be @john.first_name
+      it "can have scopes" do
+        _(MaterializedProductUser.duck_lovers.load.first.username).must_be @john.first_name
       end
 
       it "is readonly" do
-        MaterializedProductUser.first.readonly?.must_be true
+        _(MaterializedProductUser.first.readonly?).must_be true
       end
     end
   end

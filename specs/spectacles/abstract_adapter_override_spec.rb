@@ -9,6 +9,6 @@ describe "loading an adapter" do
     end
     load File.join(__dir__, '../../lib/spectacles/abstract_adapter_override.rb')
     Class.new(ActiveRecord::ConnectionAdapters::AbstractAdapter)
-    ActiveRecord::ConnectionAdapters::AbstractAdapter.instance_variable_get("@_spectacles_inherited_called").must_equal true
+    _(ActiveRecord::ConnectionAdapters::AbstractAdapter.instance_variable_get("@_spectacles_inherited_called")).must_equal true
   end
 end

@@ -21,7 +21,7 @@ module Spectacles
       end
 
       def generate_view_query(*columns)
-        sql = <<-SQL
+        <<-SQL
           SELECT #{columns.join(',')}
           FROM sqlite_master
           WHERE type = 'view'

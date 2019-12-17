@@ -1,8 +1,8 @@
-{<img src="https://travis-ci.org/liveh2o/spectacles.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/liveh2o/spectacles]
+{<img src="https://travis-ci.org/liveh2o/spectacles.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/liveh2o/spectacles] {<img src="https://badge.fury.io/rb/spectacles.svg" alt="Gem Version" />}[https://badge.fury.io/rb/spectacles]
 
 = Spectacles
 
-Spectacles adds database view functionality to ActiveRecord. It is heavily inspired by Rails SQL Views (http://github.com/aeden/rails_sql_views/) and built from the ground-up to work with Rails 3.2+.
+Spectacles adds database view functionality to ActiveRecord. It is heavily inspired by Rails SQL Views (created by https://github.com/aeden but no longer maintained) and built from the ground up to work with Rails 3.2+.
 
 Spectacles provides the ability to create views in migrations using a similar format to creating tables. It also provides an abstract view class that inherits from ActiveRecord::Base that can be used to create view-backed models.
 
@@ -59,7 +59,7 @@ they are kind of a cross between tables (which persist data) and views
     # just like Spectacles::View
   end
 
-Because these materialized views cache a snapshot of the data as it
+Because materialized views cache a snapshot of the data as it
 exists at a point in time (typically when the view was created), you
 need to manually _refresh_ the view when new data is added to the
 original tables. You can do this with the +#refresh!+ method on
@@ -117,4 +117,4 @@ to affect how the new view is created:
 
 = License
 
-Spectacles is licensed under MIT license (Read lib/spectactles.rb for full license)
+Spectacles is licensed under MIT license (Read the LICENSE file for full license)

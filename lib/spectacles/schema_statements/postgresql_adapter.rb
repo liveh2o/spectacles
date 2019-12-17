@@ -68,7 +68,7 @@ module Spectacles
         definition = row["definition"].strip.sub(/;$/, "")
 
         options = {}
-        options[:data] = false if ispopulated == 'f'
+        options[:data] = false if ispopulated == 'f' || ispopulated == false
         options[:storage] = parse_storage_definition(storage) if storage.present?
         options[:tablespace] = tablespace if tablespace.present?
 
@@ -133,6 +133,10 @@ module Spectacles
 
       def refresh_materialized_view(view_name)
         execute "REFRESH MATERIALIZED VIEW #{quote_table_name(view_name)}"
+      end
+
+      def refresh_materialized_view_concurrently(view_name)
+        execute "REFRESH MATERIALIZED VIEW CONCURRENTLY #{quote_table_name(view_name)}"
       end
 
       def parse_storage_definition(storage)

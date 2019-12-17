@@ -3,8 +3,7 @@ module Spectacles
     self.abstract_class = true
 
     def self.new(*)
-      warn "DEPRECATION WARNING: #{self} is an abstract class and should not be instantiated. In v1.0, calling `#{self}.new` will raise a NotImplementedError."
-      super # raise NotImplementedError, "#{self} is an abstract class and can not be instantiated."
+      raise NotImplementedError, "#{self} is an abstract class and cannot be instantiated."
     end
 
     def self.view_exists?

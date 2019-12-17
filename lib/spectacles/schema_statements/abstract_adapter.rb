@@ -19,8 +19,8 @@ module Spectacles
       end
 
       def create_view_statement(view_name, create_query)
-        query = "CREATE VIEW ? AS #{create_query}"
-        query_array = [query, view_name.to_s]
+        #query = "CREATE VIEW ? AS #{create_query}"
+        #query_array = [query, view_name.to_s]
 
         #return ActiveRecord::Base.__send__(:sanitize_sql_array, query_array)
         "CREATE VIEW #{view_name} AS #{create_query}"
@@ -32,8 +32,8 @@ module Spectacles
       end
 
       def drop_view_statement(view_name)
-        query = "DROP VIEW IF EXISTS ? "
-        query_array = [query, view_name.to_s]
+        #query = "DROP VIEW IF EXISTS ? "
+        #query_array = [query, view_name.to_s]
 
         #return ActiveRecord::Base.__send__(:sanitize_sql_array, query_array)
         "DROP VIEW IF EXISTS #{view_name} "
@@ -73,6 +73,10 @@ module Spectacles
 
       def refresh_materialized_view(view_name)
         raise NotImplementedError, "Override refresh_materialized_view for your db adapter in #{self.class}"
+      end
+
+      def refresh_materialized_view_concurrently(view_name)
+        raise NotImplementedError, "Override refresh_materialized_view_concurrently for your db adapter in #{self.class}"
       end
     end
   end

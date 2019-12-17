@@ -3,15 +3,23 @@ module Spectacles
     self.abstract_class = true
 
     def self.new(*)
-      raise NotImplementedError
+      raise NotImplementedError, "#{self} is an abstract class and cannot be instantiated."
     end
 
     def self.materialized_view_exists?
       self.connection.materialized_view_exists?(self.view_name)
     end
 
-    def self.refresh!
-      self.connection.refresh_materialized_view(self.view_name)
+    def self.refresh!(concurrently: false)
+      if concurrently
+        self.connection.refresh_materialized_view_concurrently(self.view_name)
+      else
+        self.connection.refresh_materialized_view(self.view_name)
+      end
+    end
+
+    def self.refresh_concurrently!
+      refresh!(concurrently: true)
     end
 
     class << self
