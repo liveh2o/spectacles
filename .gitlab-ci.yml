@@ -7,13 +7,13 @@ stages:
 
 services:
   - mysql:5.7
-  - postgres:12.2-alpine
+  - postgres:13.13
 
 before_script:
   - apt-get update
   - apt-get install gcc -y
-  - gem update --system
-  - gem install bundler --no-doc
+  - gem update --system 3.4.22
+  - gem install bundler:2.4.22 --no-doc
   - bundle install --jobs=2 --retry=3
   - bundle exec appraisal clean
   - bundle exec appraisal generate
@@ -31,61 +31,16 @@ variables:
   POSTGRES_HOST_AUTH_METHOD: "trust"
   POSTGRES_PASSWORD: ""
 
-.test-specific-version: &test-specific-version
-  image: "${CI_BUILD_NAME}"
+specs:
   stage: test
+  image: "${IMAGE_NAME}"
   script:
     - bundle exec appraisal $GEMFILE_NAME bundle install --jobs=2 --retry=3
-    - bundle exec appraisal $GEMFILE_NAME bundle exec rake
-
-# MRI
-
-rails_42_ruby_25:
-  <<: *test-specific-version
-  image: ruby:2.5
-  variables:
-    GEMFILE_NAME: rails-42
-
-rails_51_ruby_25:
-  <<: *test-specific-version
-  image: ruby:2.5
-  variables:
-    GEMFILE_NAME: rails-51
-
-rails_52_ruby_25:
-  <<: *test-specific-version
-  image: ruby:2.5
-  variables:
-    GEMFILE_NAME: rails-52
-
-rails_60_ruby_25:
-  <<: *test-specific-version
-  image: ruby:2.5
-  variables:
-    GEMFILE_NAME: rails-60
-
-# JRUBY
-
-rails_42_jruby_92:
-  <<: *test-specific-version
-  image: jruby:9.2-jdk
-  variables:
-    GEMFILE_NAME: rails-42
-
-rails_51_jruby_92:
-  <<: *test-specific-version
-  image: jruby:9.2-jdk
-  variables:
-    GEMFILE_NAME: rails-51
-
-rails_52_jruby_92:
-  <<: *test-specific-version
-  image: jruby:9.2-jdk
-  variables:
-    GEMFILE_NAME: rails-52
-
-rails_60_jruby_92:
-  <<: *test-specific-version
-  image: jruby:9.2-jdk
-  variables:
-    GEMFILE_NAME: rails-60
+    - bundle exec appraisal $GEMFILE_NAME bundle exec rake rubocop
+    - bundle exec appraisal $GEMFILE_NAME bundle exec rspec
+  parallel:
+    matrix:
+      - IMAGE_NAME: ["ruby:2.7", "jruby:9.3-jdk"]
+        GEMFILE_NAME: [rails-42, rails-52, rails-61]
+      - IMAGE_NAME: ["ruby:3.0", "ruby:3.1", "jruby:9.3-jdk17"]
+        GEMFILE_NAME: [rails-61]
