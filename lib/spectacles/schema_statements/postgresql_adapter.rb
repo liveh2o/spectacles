@@ -7,11 +7,10 @@ module Spectacles
 
       def views(name = nil) #:nodoc:
         q = <<-SQL
-              SELECT t.table_name, t.table_type
-                FROM information_schema.tables AS t
-          INNER JOIN pg_class AS c ON c.relname = t.table_name
-               WHERE t.table_schema = ANY(current_schemas(false))
-                 AND t.table_type = 'VIEW'
+              SELECT t.table_name
+                FROM information_schema.views AS t
+          INNER JOIN pg_class AS c ON c.relname = t.table_name AND c.relnamespace = to_regnamespace(t.table_schema)::oid
+               WHERE t.table_schema = ANY(current_schemas(true))
                  AND pg_catalog.pg_get_userbyid(c.relowner) = #{quote(database_username)}
         SQL
 
@@ -59,8 +58,7 @@ module Spectacles
            WHERE a.relname=#{quote(view)}
              AND b.matviewname=a.relname
         SQL
-
-        row = result[0]
+        row = result.to_a[0]
 
         storage = row["reloptions"]
         tablespace = row["tablespace"]

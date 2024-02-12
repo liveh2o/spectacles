@@ -1,0 +1,91 @@
+cache:
+  paths:
+    - vendor
+
+stages:
+  - test
+
+services:
+  - mysql:5.7
+  - postgres:12.2-alpine
+
+before_script:
+  - apt-get update
+  - apt-get install gcc -y
+  - gem update --system
+  - gem install bundler --no-doc
+  - bundle install --jobs=2 --retry=3
+  - bundle exec appraisal clean
+  - bundle exec appraisal generate
+
+variables:
+  # Configure mysql environment variables (https://hub.docker.com/_/mysql/)
+  MYSQL_DATABASE: spectacles_test
+  MYSQL_ROOT_PASSWORD: rootpassword
+  MYSQL_PASSWORD: password
+  MYSQL_USER: runner
+  MYSQL_HOST: mysql
+  POSTGRES_DB: "postgres"
+  POSTGRES_USER: runner
+  POSTGRES_HOST: postgres
+  POSTGRES_HOST_AUTH_METHOD: "trust"
+  POSTGRES_PASSWORD: ""
+
+.test-specific-version: &test-specific-version
+  image: "${CI_BUILD_NAME}"
+  stage: test
+  script:
+    - bundle exec appraisal $GEMFILE_NAME bundle install --jobs=2 --retry=3
+    - bundle exec appraisal $GEMFILE_NAME bundle exec rake
+
+# MRI
+
+rails_42_ruby_25:
+  <<: *test-specific-version
+  image: ruby:2.5
+  variables:
+    GEMFILE_NAME: rails-42
+
+rails_51_ruby_25:
+  <<: *test-specific-version
+  image: ruby:2.5
+  variables:
+    GEMFILE_NAME: rails-51
+
+rails_52_ruby_25:
+  <<: *test-specific-version
+  image: ruby:2.5
+  variables:
+    GEMFILE_NAME: rails-52
+
+rails_60_ruby_25:
+  <<: *test-specific-version
+  image: ruby:2.5
+  variables:
+    GEMFILE_NAME: rails-60
+
+# JRUBY
+
+rails_42_jruby_92:
+  <<: *test-specific-version
+  image: jruby:9.2-jdk
+  variables:
+    GEMFILE_NAME: rails-42
+
+rails_51_jruby_92:
+  <<: *test-specific-version
+  image: jruby:9.2-jdk
+  variables:
+    GEMFILE_NAME: rails-51
+
+rails_52_jruby_92:
+  <<: *test-specific-version
+  image: jruby:9.2-jdk
+  variables:
+    GEMFILE_NAME: rails-52
+
+rails_60_jruby_92:
+  <<: *test-specific-version
+  image: jruby:9.2-jdk
+  variables:
+    GEMFILE_NAME: rails-60

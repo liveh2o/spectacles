@@ -15,7 +15,13 @@ module Spectacles
         end
 
         query = create_view_statement(view_name, build_query)
-        execute(query)
+        if defined?(ActiveRecord::Base.connection_handler)
+          ActiveRecord::Base.connection_handler.while_preventing_writes(false) do
+            execute(query)
+          end
+        else
+          execute(query)
+        end
       end
 
       def create_view_statement(view_name, create_query)

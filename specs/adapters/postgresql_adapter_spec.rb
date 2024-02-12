@@ -3,8 +3,8 @@ require 'spec_helper'
 describe "Spectacles::SchemaStatements::PostgreSQLAdapter" do
   config = {
     :adapter => "postgresql",
-    :host => "localhost",
-    :username => "postgres",
+    :host => ENV["POSTGRES_HOST"] || "localhost",
+    :username => ENV["POSTGRES_USER"] || "postgres",
     :database => "postgres",
     :min_messages => "error"
   }
