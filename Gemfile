@@ -11,8 +11,8 @@ end
 
 platforms :ruby do
   gem "mysql2"
-  gem 'pg', '~> 0.20'
-  gem "sqlite3", '~> 1.4.2'
+  gem "pg"
+  gem "sqlite3"
 end
 
 group :test do
