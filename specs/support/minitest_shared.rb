@@ -1,4 +1,4 @@
-require 'Minitest/spec'
+require 'minitest/spec'
 
 Minitest::Spec.class_eval do
   def self.shared_examples
