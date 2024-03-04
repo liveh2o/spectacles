@@ -1,16 +1,3 @@
-appraise "rails-42" do
-  gem "activerecord", "~> 4.2"
-  platforms :ruby do
-    gem 'pg', '~> 0.20'
-    gem "sqlite3", '~> 1.3.13'
-  end
-
-  platforms :jruby do
-    gem "activerecord-jdbcpostgresql-adapter", "= 1.3.25"
-    gem "activerecord-jdbcsqlite3-adapter", "= 1.3.25"
-  end
-end
-
 appraise "rails-52" do
   gem "activerecord", "~> 5.2", "< 6"
   platforms :jruby do
@@ -25,5 +12,14 @@ appraise "rails-61" do
   platforms :jruby do
     gem "activerecord-jdbcpostgresql-adapter", ">= 61", "< 62"
     gem "activerecord-jdbcsqlite3-adapter", ">= 61", "< 62"
+  end
+end
+
+appraise "rails-70" do
+  gem "activerecord", "~> 7.0", "< 7.1"
+  gem "protobuf-activerecord", ">= 7.0"
+  platforms :jruby do
+    gem "activerecord-jdbcpostgresql-adapter", ">= 70", "< 72"
+    gem "activerecord-jdbcsqlite3-adapter", ">= 70", "< 72"
   end
 end

@@ -1,0 +1,39 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+# GitHub recommends pinning actions to a commit SHA.
+# To get a newer version, you will need to update the SHA.
+# You can also reference a tag or branch, but the action may change without warning.
+
+name: Ruby CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ruby-version: ['jruby-9.3','jruby-9.4','2.7','3.0','3.1']
+        rails-version: ['rails-61','rails-70']
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby ${{ matrix.ruby-version }}
+        uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+      - name: Install dependencies
+        run: bundle install
+      - name: Generate gemfiles
+        run: bundle exec appraisal clean && bundle exec appraisal generate
+      - name: Install from appraisal gemfile
+        run: bundle exec appraisal ${{ matrix.rails-version }} bundle install --jobs=2 --retry=3
+      - name: Run tests
+        run: bundle exec rake
