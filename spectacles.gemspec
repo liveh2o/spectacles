@@ -22,8 +22,8 @@ Gem::Specification.new do |gem|
   # Dependencies
   #
   gem.required_ruby_version = ">= 2.6.0"
-  gem.add_dependency "activerecord", ">= 6.0.0", "< 7.1"
-  gem.add_dependency "activesupport", ">= 6.0.0", "< 7.1"
+  gem.add_dependency "activerecord", ">= 6.1.0", "< 7.1"
+  gem.add_dependency "activesupport", ">= 6.1.0", "< 7.1"
 
   ##
   # Development dependencies
