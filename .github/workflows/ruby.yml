@@ -36,4 +36,4 @@ jobs:
       - name: Install from appraisal gemfile
         run: bundle exec appraisal ${{ matrix.rails-version }} bundle install --jobs=2 --retry=3
       - name: Run tests
-        run: bundle exec rake
+        run: bundle exec appraisal ${{ matrix.rails-version }} bundle exec rake
