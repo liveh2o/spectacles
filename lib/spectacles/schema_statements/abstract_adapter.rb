@@ -15,7 +15,7 @@ module Spectacles
         end
 
         query = create_view_statement(view_name, build_query)
-        if defined?(ActiveRecord::Base.connection_handler)
+        if defined?(ActiveRecord::Base.connection_handler) && ActiveRecord.respond_to?(:legacy_connection_handling) && ActiveRecord.legacy_connection_handling
           ActiveRecord::Base.connection_handler.while_preventing_writes(false) do
             execute(query)
           end
