@@ -21,13 +21,14 @@ Gem::Specification.new do |gem|
   ##
   # Dependencies
   #
-  gem.required_ruby_version = ">= 2.2.0"
-  gem.add_dependency "activerecord", ">= 3.2.0", "~> 6.1.0"
-  gem.add_dependency "activesupport", ">= 3.2.0", "~> 6.1.0"
+  gem.required_ruby_version = ">= 2.6.0"
+  gem.add_dependency "activerecord", ">= 6.1.0", "< 7.1"
+  gem.add_dependency "activesupport", ">= 6.1.0", "< 7.1"
 
   ##
   # Development dependencies
   #
+  gem.add_development_dependency "appraisal"
   gem.add_development_dependency "rake"
-  gem.add_development_dependency "minitest"
+  gem.add_development_dependency "minitest", ">= 5.0"
 end
