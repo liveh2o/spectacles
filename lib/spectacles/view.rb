@@ -7,7 +7,7 @@ module Spectacles
     end
 
     def self.view_exists?
-      self.connection.view_exists?(self.view_name)
+      connection.view_exists?(view_name)
     end
 
     class << self
@@ -15,11 +15,11 @@ module Spectacles
       alias_method :view_name, :table_name
     end
 
-    def ==(comparison_object)
+    def ==(other)
       super ||
-        comparison_object.instance_of?(self.class) &&
-        attributes.present? &&
-        comparison_object.attributes == attributes
+        other.instance_of?(self.class) &&
+          attributes.present? &&
+          other.attributes == attributes
     end
 
     def persisted?

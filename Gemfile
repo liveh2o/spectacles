@@ -16,5 +16,5 @@ platforms :ruby do
 end
 
 group :test do
-  gem 'simplecov', :require => false
+  gem "simplecov", require: false
 end
