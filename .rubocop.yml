@@ -1,0 +1,3 @@
+---
+inherit_gem:
+  standard: config/ruby-2.7.yml

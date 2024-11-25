@@ -7,14 +7,14 @@ module Spectacles
     end
 
     def self.materialized_view_exists?
-      self.connection.materialized_view_exists?(self.view_name)
+      connection.materialized_view_exists?(view_name)
     end
 
     def self.refresh!(concurrently: false)
       if concurrently
-        self.connection.refresh_materialized_view_concurrently(self.view_name)
+        connection.refresh_materialized_view_concurrently(view_name)
       else
-        self.connection.refresh_materialized_view(self.view_name)
+        connection.refresh_materialized_view(view_name)
       end
     end
 
@@ -27,11 +27,11 @@ module Spectacles
       alias_method :view_name, :table_name
     end
 
-    def ==(comparison_object)
+    def ==(other)
       super ||
-        comparison_object.instance_of?(self.class) &&
-        attributes.present? &&
-        comparison_object.attributes == attributes
+        other.instance_of?(self.class) &&
+          attributes.present? &&
+          other.attributes == attributes
     end
 
     def persisted?

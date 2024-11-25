@@ -1,4 +1,4 @@
-require 'spectacles/schema_statements/abstract_adapter'
+require "spectacles/schema_statements/abstract_adapter"
 
 module Spectacles
   module SchemaStatements
@@ -15,24 +15,24 @@ module Spectacles
         SQL
         sql << " AND name = #{quote_table_name(table_name)}" if table_name
 
-        exec_query(sql, 'SCHEMA').map do |row|
-          row['name']
+        exec_query(sql, "SCHEMA").map do |row|
+          row["name"]
         end
       end
 
       def generate_view_query(*columns)
         <<-SQL
-          SELECT #{columns.join(',')}
+          SELECT #{columns.join(",")}
           FROM sqlite_master
           WHERE type = 'view'
         SQL
       end
 
-      def views #:nodoc:
+      def views # :nodoc:
         sql = generate_view_query(:name)
 
         exec_query(sql, "SCHEMA").map do |row|
-          row['name']
+          row["name"]
         end
       end
 
@@ -41,7 +41,7 @@ module Spectacles
         sql << " AND name = #{quote_table_name(table_name)}"
 
         row = exec_query(sql, "SCHEMA").first
-        row['sql'].gsub(/CREATE VIEW .*? AS/i, "")
+        row["sql"].gsub(/CREATE VIEW .*? AS/i, "")
       end
     end
   end
