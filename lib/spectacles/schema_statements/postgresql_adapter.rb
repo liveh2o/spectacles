@@ -11,6 +11,7 @@ module Spectacles
                 FROM information_schema.views AS t
           INNER JOIN pg_class AS c ON c.relname = t.table_name AND c.relnamespace = to_regnamespace(t.table_schema)::oid
                WHERE t.table_schema = ANY(current_schemas(true))
+                 AND table_schema NOT IN ('information_schema', 'pg_catalog')
                  AND pg_catalog.pg_get_userbyid(c.relowner) = #{quote(database_username)}
         SQL
 
