@@ -1,3 +1,5 @@
+[![Build](https://github.com/liveh2o/spectacles/workflows/main.yml/badge.svg)](https://github.com/liveh2o/spectacles/actions)
+[![Ruby Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/standardrb/standard)
 [![Gem Version](https://badge.fury.io/rb/spectacles.svg)](https://badge.fury.io/rb/spectacles)
 
 # Spectacles

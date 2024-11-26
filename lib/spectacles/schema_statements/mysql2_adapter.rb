@@ -17,12 +17,12 @@ module Spectacles
              #{by_name}
         SQL
 
-        execute_and_free(sql, 'SCHEMA') do |result|
+        execute_and_free(sql, "SCHEMA") do |result|
           rows_from(result).map(&:first)
         end
       end
 
-      def views(name = nil) #:nodoc:
+      def views(name = nil) # :nodoc:
         result = execute("SHOW FULL TABLES WHERE TABLE_TYPE='VIEW'")
 
         rows_from(result).map(&:first)
@@ -37,7 +37,7 @@ module Spectacles
         raise "No view called #{view} found, #{e}"
       end
 
-    private
+      private
 
       def rows_from(result)
         result.respond_to?(:rows) ? result.rows : result

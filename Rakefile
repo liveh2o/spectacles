@@ -1,9 +1,10 @@
 require "bundler/gem_tasks"
-require 'rake/testtask'
+require "rake/testtask"
+require "standard/rake"
 
 namespace :test do
-  adapters = [ :mysql2, :postgresql, :sqlite3 ]
-  task :all => [ :spectacles ] + adapters
+  adapters = [:mysql2, :postgresql, :sqlite3]
+  task all: [:spectacles] + adapters
 
   adapters.each do |adapter|
     Rake::TestTask.new(adapter) do |t|
@@ -22,4 +23,4 @@ namespace :test do
   end
 end
 
-task :default => 'test:all'
+task default: ["test:all", "standard:fix"]
