@@ -26,7 +26,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby-version: [2.7, jruby-9.4]
+        ruby-version: [2.7, jruby-9.4, head, jruby-head]
+
+    continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
 
     services:
       mysql:
@@ -58,7 +60,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby-version: [2.7, jruby-9.4]
+        ruby-version: [2.7, jruby-9.4, head, jruby-head]
+
+    continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
 
     services:
       postgres:
@@ -98,7 +102,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby-version: [2.7, jruby-9.4]
+        ruby-version: [2.7, jruby-9.4, head, jruby-head]
+
+    continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
 
     env:
       JRUBY_OPTS: "-J-Xms64M -J-Xmx1024M"
