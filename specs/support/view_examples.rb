@@ -4,17 +4,13 @@ shared_examples_for "a view model" do
     products JOIN users ON users.id = products.user_id"
   end
 
-  class NewProductUser < Spectacles::View
-    scope :duck_lovers, lambda { where(:product_name => 'Rubber Duck') }
-  end
-
   describe "Spectacles::View" do
     describe "inherited class" do
       before(:each) do
         User.destroy_all
         Product.destroy_all
-        @john = User.create(:first_name => 'John', :last_name => 'Doe')
-        @john.products.create(:name => 'Rubber Duck', :value => 10)
+        @john = User.create(first_name: "John", last_name: "Doe")
+        @john.products.create(name: "Rubber Duck", value: 10)
       end
 
       let(:new_product_user) { NewProductUser.duck_lovers.load.first }
@@ -38,15 +34,15 @@ shared_examples_for "a view model" do
     end
 
     class MaterializedProductUser < Spectacles::MaterializedView
-      scope :duck_lovers, lambda { where(:product_name => 'Rubber Duck') }
+      scope :duck_lovers, lambda { where(product_name: "Rubber Duck") }
     end
 
     describe "Spectacles::MaterializedView" do
       before(:each) do
         User.delete_all
         Product.delete_all
-        @john = User.create(:first_name => 'John', :last_name => 'Doe')
-        @duck = @john.products.create(:name => 'Rubber Duck', :value => 10)
+        @john = User.create(first_name: "John", last_name: "Doe")
+        @duck = @john.products.create(name: "Rubber Duck", value: 10)
         MaterializedProductUser.refresh!
       end
 

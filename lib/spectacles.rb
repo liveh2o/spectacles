@@ -1,14 +1,14 @@
-require 'active_record'
-require 'active_support/core_ext'
-require 'spectacles/schema_statements'
-require 'spectacles/schema_dumper'
-require 'spectacles/view'
-require 'spectacles/materialized_view'
-require 'spectacles/version'
-require 'spectacles/configuration'
-require 'spectacles/abstract_adapter_override'
+require "active_record"
+require "active_support/core_ext"
+require "spectacles/schema_statements"
+require "spectacles/schema_dumper"
+require "spectacles/view"
+require "spectacles/materialized_view"
+require "spectacles/version"
+require "spectacles/configuration"
+require "spectacles/abstract_adapter_override"
 
-require 'spectacles/railtie' if defined?(Rails)
+require "spectacles/railtie" if defined?(Rails)
 
 module Spectacles
   def self.configuration
@@ -34,4 +34,4 @@ ActiveRecord::SchemaDumper.class_eval do
   end
 end
 
-Spectacles::load_adapters
+Spectacles.load_adapters

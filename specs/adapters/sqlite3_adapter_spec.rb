@@ -1,11 +1,15 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe "Spectacles::SchemaStatements::SQLite3Adapter" do
-  File.delete(File.expand_path(File.dirname(__FILE__) + "/../test.db")) rescue nil
+  begin
+    File.delete(File.expand_path(File.dirname(__FILE__) + "/../test.db"))
+  rescue
+    nil
+  end
 
   ActiveRecord::Base.establish_connection(
-    :adapter => "sqlite3",
-    :database => "specs/test.db"
+    adapter: "sqlite3",
+    database: "specs/test.db"
   )
   load_schema
 

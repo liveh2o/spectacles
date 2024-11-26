@@ -1,11 +1,11 @@
-require 'spectacles/schema_statements/abstract_adapter'
+require "spectacles/schema_statements/abstract_adapter"
 
 module Spectacles
   module SchemaStatements
     module PostgreSQLAdapter
       include Spectacles::SchemaStatements::AbstractAdapter
 
-      def views(name = nil) #:nodoc:
+      def views(name = nil) # :nodoc:
         q = <<-SQL
               SELECT t.table_name
                 FROM information_schema.views AS t
@@ -14,7 +14,7 @@ module Spectacles
                  AND pg_catalog.pg_get_userbyid(c.relowner) = #{quote(database_username)}
         SQL
 
-        execute(q, name).map { |row| row['table_name'] }
+        execute(q, name).map { |row| row["table_name"] }
       end
 
       def view_build_query(view, name = nil)
@@ -45,7 +45,7 @@ module Spectacles
              AND relkind = 'm';
         SQL
 
-        execute(query, name).map { |row| row['relname'] }
+        execute(query, name).map { |row| row["relname"] }
       end
 
       # Returns a tuple [string, hash], where string is the query used
@@ -66,37 +66,37 @@ module Spectacles
         definition = row["definition"].strip.sub(/;$/, "")
 
         options = {}
-        options[:data] = false if ispopulated == 'f' || ispopulated == false
+        options[:data] = false if ispopulated == "f" || ispopulated == false
         options[:storage] = parse_storage_definition(storage) if storage.present?
         options[:tablespace] = tablespace if tablespace.present?
 
         [definition, options]
       end
 
-      def create_materialized_view_statement(view_name, query, options={})
+      def create_materialized_view_statement(view_name, query, options = {})
         columns = if options[:columns]
-            "(" + options[:columns].map { |c| quote_column_name(c) }.join(",") + ")"
-          else
-            ""
-          end
+          "(" + options[:columns].map { |c| quote_column_name(c) }.join(",") + ")"
+        else
+          ""
+        end
 
-        storage = if options[:storage] && options[:storage].any?
-            "WITH (" + options[:storage].map { |key, value| "#{key}=#{value}" }.join(", ") + ")"
-          else
-            ""
-          end
+        storage = if options[:storage]&.any?
+          "WITH (" + options[:storage].map { |key, value| "#{key}=#{value}" }.join(", ") + ")"
+        else
+          ""
+        end
 
         tablespace = if options[:tablespace]
-            "TABLESPACE #{quote_table_name(options[:tablespace])}"
-          else
-            ""
-          end
+          "TABLESPACE #{quote_table_name(options[:tablespace])}"
+        else
+          ""
+        end
 
         with_data = if options.fetch(:data, true)
-            "WITH DATA"
-          else
-            "WITH NO DATA"
-          end
+          "WITH DATA"
+        else
+          "WITH NO DATA"
+        end
 
         <<-SQL.squish
           CREATE MATERIALIZED VIEW #{quote_table_name(view_name)}
@@ -143,10 +143,9 @@ module Spectacles
         storage = storage.first if storage.is_a?(Array)
 
         storage = storage.gsub(/^{|}$/, "")
-        storage.split(/,/).inject({}) do |hash, item|
-          key, value = item.strip.split(/=/)
+        storage.split(",").each_with_object({}) do |item, hash|
+          key, value = item.strip.split("=")
           hash[key.to_sym] = value
-          hash
         end
       end
 

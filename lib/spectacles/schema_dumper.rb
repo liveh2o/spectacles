@@ -48,7 +48,7 @@ module Spectacles
     def self.format_option_hash(hash)
       hash.map do |key, value|
         "#{key}: #{format_option_value(value)}"
-      end.join(', ')
+      end.join(", ")
     end
 
     def self.format_option_value(value)

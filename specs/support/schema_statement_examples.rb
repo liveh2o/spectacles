@@ -1,9 +1,17 @@
 shared_examples_for "an adapter" do |adapter|
   shared_base = Class.new do
     extend Spectacles::SchemaStatements.const_get(adapter)
-    def self.quote_table_name(name); name; end
-    def self.quote_column_name(name); name; end
-    def self.execute(query); query; end
+    def self.quote_table_name(name)
+      name
+    end
+
+    def self.quote_column_name(name)
+      name
+    end
+
+    def self.execute(query)
+      query
+    end
   end
 
   describe "ActiveRecord::SchemaDumper#dump" do
@@ -26,7 +34,7 @@ shared_examples_for "an adapter" do |adapter|
 
         ActiveRecord::Base.connection.add_index :materialized_product_users, :product_name
 
-        ActiveRecord::Base.connection.create_materialized_view(:empty_materialized_product_users, storage: { fillfactor: 50 }, data: false, force: true) do
+        ActiveRecord::Base.connection.create_materialized_view(:empty_materialized_product_users, storage: {fillfactor: 50}, data: false, force: true) do
           "SELECT name AS product_name, first_name AS username FROM
           products JOIN users ON users.id = products.user_id"
         end
@@ -78,12 +86,13 @@ shared_examples_for "an adapter" do |adapter|
         ActiveRecord::Base.connection.drop_table(table)
       end
 
-      eval(stream.string)
+      # TODO: Find a better way to do this... – AH
+      eval(stream.string) # rubocop:disable Security/Eval
 
-      _(ActiveRecord::Base.connection.views).must_include('new_product_users')
+      _(ActiveRecord::Base.connection.views).must_include("new_product_users")
 
       if ActiveRecord::Base.connection.supports_materialized_views?
-        _(ActiveRecord::Base.connection.materialized_views).must_include('materialized_product_users')
+        _(ActiveRecord::Base.connection.materialized_views).must_include("materialized_product_users")
       end
     end
   end

@@ -1,19 +1,19 @@
-require 'simplecov'
+require "simplecov"
 SimpleCov.start do
   add_filter "/specs"
 end
 
-require 'rubygems'
-require 'bundler'
+require "rubygems"
+require "bundler"
 Bundler.require(:default, :development, :test)
 
-require 'minitest/spec'
-require 'minitest/autorun'
-require 'minitest/pride'
-require 'support/minitest_shared'
-require 'support/minitest_matchers'
-require 'support/schema_statement_examples'
-require 'support/view_examples'
+require "minitest/spec"
+require "minitest/autorun"
+require "minitest/pride"
+require "support/minitest_shared"
+require "support/minitest_matchers"
+require "support/schema_statement_examples"
+require "support/view_examples"
 
 class User < ActiveRecord::Base
   has_many :products
@@ -23,6 +23,26 @@ class Product < ActiveRecord::Base
   belongs_to :user
 end
 
+class NewProductUser < Spectacles::View
+  scope :duck_lovers, lambda { where(product_name: "Rubber Duck") }
+end
+
+class TestBase
+  extend Spectacles::SchemaStatements::AbstractAdapter
+
+  def self.materialized_views
+    @materialized_views ||= nil
+    @materialized_views || super
+  end
+
+  def self.with_materialized_views(list)
+    @materialized_views = list
+    yield
+  ensure
+    @materialized_views = nil
+  end
+end
+
 ActiveRecord::Schema.verbose = false
 
 def configure_database(config)
@@ -30,7 +50,7 @@ def configure_database(config)
 end
 
 def load_schema
-  ActiveRecord::Schema.define(:version => 1) do
+  ActiveRecord::Schema.define(version: 1) do
     create_table :users do |t|
       t.string :first_name
       t.string :last_name
@@ -39,7 +59,7 @@ def load_schema
     create_table :products do |t|
       t.string :name
       t.integer :value
-      t.boolean :available, :default => true
+      t.boolean :available, default: true
       t.belongs_to :user
     end
   end
@@ -47,7 +67,11 @@ end
 
 def recreate_database(database)
   ActiveRecord::Base.establish_connection(@database_config)
-  ActiveRecord::Base.connection.drop_database(database) rescue nil
+  begin
+    ActiveRecord::Base.connection.drop_database(database)
+  rescue
+    nil
+  end
   ActiveRecord::Base.connection.create_database(database)
-  ActiveRecord::Base.establish_connection(@database_config.merge(:database => database))
+  ActiveRecord::Base.establish_connection(@database_config.merge(database: database))
 end
