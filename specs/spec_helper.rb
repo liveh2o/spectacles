@@ -11,7 +11,6 @@ require "minitest/spec"
 require "minitest/autorun"
 require "minitest/pride"
 require "support/minitest_shared"
-require "support/minitest_matchers"
 require "support/schema_statement_examples"
 require "support/view_examples"
 

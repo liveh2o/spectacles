@@ -16,12 +16,12 @@ shared_examples_for "a view model" do
       let(:new_product_user) { NewProductUser.duck_lovers.load.first }
 
       it "can have scopes" do
-        _(new_product_user.username).must_be @john.first_name
+        _(new_product_user.username).must_equal @john.first_name
       end
 
       describe "an instance" do
         it "is readonly" do
-          _(new_product_user.readonly?).must_be true
+          _(new_product_user.readonly?).must_equal true
         end
       end
     end
@@ -47,11 +47,11 @@ shared_examples_for "a view model" do
       end
 
       it "can have scopes" do
-        _(MaterializedProductUser.duck_lovers.load.first.username).must_be @john.first_name
+        _(MaterializedProductUser.duck_lovers.load.first.username).must_equal @john.first_name
       end
 
       it "is readonly" do
-        _(MaterializedProductUser.first.readonly?).must_be true
+        _(MaterializedProductUser.first.readonly?).must_equal true
       end
     end
   end
