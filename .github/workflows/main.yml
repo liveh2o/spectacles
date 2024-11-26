@@ -1,17 +1,12 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
 # This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
 # For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
-
-name: CI
+name: build
 
 on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+    branches: "*"
 
 jobs:
   style:
@@ -24,3 +19,97 @@ jobs:
           ruby-version: "2.7"
           bundler-cache: true
       - run: bundle exec standardrb --format github
+
+  test-mysql:
+    name: Tests (MySQL)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version: [2.7, jruby-9.4]
+
+    services:
+      mysql:
+        image: mysql:5.7
+        ports:
+          - 3306
+    env:
+      JRUBY_OPTS: "-J-Xms64M -J-Xmx1024M"
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: Setup database
+        run: |
+          sudo service mysql start
+      - name: Run tests
+        run: |
+          bundle exec rake test:mysql2
+
+  test-pgsql:
+    name: Tests (Postgres)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version: [2.7, jruby-9.4]
+
+    services:
+      postgres:
+        image: postgres:11
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    env:
+      JRUBY_OPTS: "-J-Xms64M -J-Xmx1024M"
+      PGHOST: localhost
+      PGPORT: 5432
+      PGUSER: postgres
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: Setup database
+        env:
+          PGPASSWORD: postgres
+        run: |
+          createdb spectacles_test
+      - name: Run tests
+        run: |
+          bundle exec rake test:postgresql
+
+  test-sqlite:
+    name: Tests (SQLite)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version: [2.7, jruby-9.4]
+
+    env:
+      JRUBY_OPTS: "-J-Xms64M -J-Xmx1024M"
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: Run tests
+        run: |
+          bundle exec rake test:sqlite3
