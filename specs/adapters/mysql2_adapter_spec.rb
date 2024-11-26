@@ -8,6 +8,11 @@ describe "Spectacles::SchemaStatements::Mysql2Adapter" do
     password: ENV["MYSQL_PASSWORD"]
   }
 
+  if defined? JRUBY_VERSION
+    config[:properties] ||= {}
+    config[:properties]["allowPublicKeyRetrieval"] = true
+  end
+
   configure_database(config)
   recreate_database("spectacles_test")
   load_schema
