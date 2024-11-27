@@ -26,7 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby-version: [2.7, jruby-9.4, head, jruby-head]
+        ruby-version: [2.7, head, jruby-head]
     continue-on-error: ${{ endsWith(matrix.ruby-version, 'head') || matrix.ruby-version == 'debug' }}
 
     services:
@@ -60,7 +60,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby-version: [2.7, jruby-9.4, head, jruby-head]
+        ruby-version: [2.7, head, jruby-head]
     continue-on-error: ${{ endsWith(matrix.ruby-version, 'head') || matrix.ruby-version == 'debug' }}
 
     services:
@@ -101,7 +101,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby-version: [2.7, jruby-9.4, head, jruby-head]
+        ruby-version: [2.7, head, jruby-head]
     continue-on-error: ${{ endsWith(matrix.ruby-version, 'head') || matrix.ruby-version == 'debug' }}
 
     env:
