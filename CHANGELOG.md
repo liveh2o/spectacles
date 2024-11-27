@@ -1,9 +1,17 @@
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+Spectacles adheres to a shifted version of [semver](https://semver.org/spec/v2.0.0.html)
+(a la Rails): major/minor versions shadow Rails [versions](https://guides.rubyonrails.org/maintenance_policy.html#versioning)
+since Spectacles depends on specific Rails versions.
 
 ## [Unreleased]
+
+## [8.0.0] – 2024-11-27
+
+- Require Ruby 3.2+
+- Require Rails 8.0
 
 ## [7.2.0] – 2024-11-27
 
@@ -14,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Require Rails 7.1
 
-## [7.0.0] – 2024-11-26
+## [7.0.0] – 2024-11-27
 
 - Add support for dumping views from multiple schemas in Postgres ([#32](https://github.com/liveh2o/spectacles/pull/32))
 - Require Ruby 2.7+
