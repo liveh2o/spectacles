@@ -5,8 +5,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Add Rails 7.0 support
-- Add support for dumping views from multiple schemas in Postgres
+## [7.0.0] – 2024-11-26
+
+- Add support for dumping views from multiple schemas in Postgres ([#32](https://github.com/liveh2o/spectacles/pull/32))
 - Require Ruby 2.7+
 - Require Rails 7.0
 
