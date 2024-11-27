@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = "Spectacles adds database view functionality to ActiveRecord. Current supported adapters include Postgres, SQLite, Vertica, and MySQL."
   spec.homepage = "http://github.com/liveh2o/spectacles"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 2.7.0"
+  spec.required_ruby_version = ">= 3.1.0"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
