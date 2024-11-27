@@ -49,26 +49,26 @@ shared_examples_for "an adapter" do |adapter|
 
     it "should return create_view in dump stream" do
       stream = StringIO.new
-      ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
+      ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection_pool, stream)
       _(stream.string).must_match(/create_view/)
     end
 
     if ActiveRecord::Base.connection.supports_materialized_views?
       it "should return create_materialized_view in dump stream" do
         stream = StringIO.new
-        ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
+        ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection_pool, stream)
         _(stream.string).must_match(/create_materialized_view/)
       end
 
       it "should return add_index in dump stream" do
         stream = StringIO.new
-        ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
+        ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection_pool, stream)
         _(stream.string).must_match(/add_index/)
       end
 
       it "should include options for create_materialized_view" do
         stream = StringIO.new
-        ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
+        ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection_pool, stream)
         _(stream.string).must_match(/create_materialized_view.*fillfactor: 50/)
         _(stream.string).must_match(/create_materialized_view.*data: false/)
       end
@@ -76,7 +76,7 @@ shared_examples_for "an adapter" do |adapter|
 
     it "should rebuild views in dump stream" do
       stream = StringIO.new
-      ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, stream)
+      ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection_pool, stream)
 
       if ActiveRecord::Base.connection.supports_materialized_views?
         ActiveRecord::Base.connection.materialized_views.each do |view|
