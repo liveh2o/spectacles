@@ -1,26 +1,25 @@
+# frozen_string_literal: true
+
 require "bundler/gem_tasks"
-require "rake/testtask"
-require "standard/rake"
+require "minitest/test_task"
 
 namespace :test do
-  adapters = [:mysql2, :postgresql, :sqlite3]
-  task all: [:spectacles] + adapters
+  Minitest::TestTask.create :spectacles do |t|
+    t.test_globs = ["test/spectacles/**/*_test.rb"]
+    t.warning = false
+  end
 
+  adapters = %i[mysql2 postgresql sqlite3]
   adapters.each do |adapter|
-    Rake::TestTask.new(adapter) do |t|
-      t.libs.push "lib"
-      t.libs.push "specs"
-      t.pattern = "specs/adapters/#{t.name}*_spec.rb"
-      t.verbose = true
+    Minitest::TestTask.create adapter do |t|
+      t.test_globs = ["test/adapters/#{t.name}*_test.rb"]
+      t.warning = false
     end
   end
 
-  Rake::TestTask.new(:spectacles) do |t|
-    t.libs.push "lib"
-    t.libs.push "specs"
-    t.pattern = "specs/spectacles/**/*_spec.rb"
-    t.verbose = true
-  end
+  task all: %i[spectacles] + adapters
 end
 
-task default: ["test:all", "standard:fix"]
+require "standard/rake"
+
+task default: %i[test:all standard:fix]

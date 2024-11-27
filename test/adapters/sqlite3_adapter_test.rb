@@ -1,4 +1,4 @@
-require "spec_helper"
+require "test_helper"
 
 describe "Spectacles::SchemaStatements::SQLite3Adapter" do
   begin
@@ -9,7 +9,7 @@ describe "Spectacles::SchemaStatements::SQLite3Adapter" do
 
   ActiveRecord::Base.establish_connection(
     adapter: "sqlite3",
-    database: "specs/test.db"
+    database: "test/test.db"
   )
   load_schema
 

@@ -1,4 +1,4 @@
-require "spec_helper"
+require "test_helper"
 
 describe Spectacles::SchemaStatements::AbstractAdapter do
   describe "#create_view" do
