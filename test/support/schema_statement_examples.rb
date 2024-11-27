@@ -17,8 +17,14 @@ shared_examples_for "an adapter" do |adapter|
   describe "ActiveRecord::SchemaDumper#dump" do
     before(:each) do
       ActiveRecord::Base.connection.drop_view(:new_product_users)
+      ActiveRecord::Base.connection.drop_view(:other_product_users)
 
       ActiveRecord::Base.connection.create_view(:new_product_users) do
+        "SELECT name AS product_name, first_name AS username FROM
+        products JOIN users ON users.id = products.user_id"
+      end
+
+      ActiveRecord::Base.connection.create_view(:other_product_users) do
         "SELECT name AS product_name, first_name AS username FROM
         products JOIN users ON users.id = products.user_id"
       end
