@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 require "simplecov"
+
 SimpleCov.start do
-  add_filter "/specs"
+  add_filter "/spec"
 end
 
 require "rubygems"
@@ -10,37 +13,11 @@ Bundler.require(:default, :development, :test)
 require "minitest/spec"
 require "minitest/autorun"
 require "minitest/pride"
-require "support/minitest_shared"
+
+require "support/minitest/shared_examples"
 require "support/schema_statement_examples"
+require "support/test_classes"
 require "support/view_examples"
-
-class User < ActiveRecord::Base
-  has_many :products
-end
-
-class Product < ActiveRecord::Base
-  belongs_to :user
-end
-
-class NewProductUser < Spectacles::View
-  scope :duck_lovers, lambda { where(product_name: "Rubber Duck") }
-end
-
-class TestBase
-  extend Spectacles::SchemaStatements::AbstractAdapter
-
-  def self.materialized_views
-    @materialized_views ||= nil
-    @materialized_views || super
-  end
-
-  def self.with_materialized_views(list)
-    @materialized_views = list
-    yield
-  ensure
-    @materialized_views = nil
-  end
-end
 
 ActiveRecord::Schema.verbose = false
 

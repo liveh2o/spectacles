@@ -1,4 +1,4 @@
-require "spec_helper"
+require "test_helper"
 
 describe "loading an adapter" do
   it "calls the original AR::CA::AbstractAdapter.inherited method" do

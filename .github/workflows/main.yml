@@ -34,6 +34,7 @@ jobs:
         image: mysql:5.7
         ports:
           - 3306
+
     env:
       JRUBY_OPTS: "-J-Xms64M -J-Xmx1024M"
       MYSQL_USER: root
