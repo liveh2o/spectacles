@@ -5,13 +5,12 @@ module Spectacles
 
       def views(name = nil) # :nodoc:
         result = execute("SHOW FULL TABLES WHERE TABLE_TYPE='VIEW'")
-
-        rows_from(result).map(&:first)
+        values_from(result).map(&:first)
       end
 
       def view_build_query(view, name = nil)
         result = execute("SHOW CREATE VIEW #{view}", name)
-        algorithm_string = rows_from(result).first[1]
+        algorithm_string = values_from(result).first[1]
 
         algorithm_string.gsub(/CREATE .*? (AS)+/i, "")
       rescue ActiveRecord::StatementInvalid => e
@@ -20,8 +19,8 @@ module Spectacles
 
       private
 
-      def rows_from(result)
-        result.respond_to?(:rows) ? result.rows : result
+      def values_from(result)
+        result.first.respond_to?(:values) ? result.map(&:values) : result
       end
     end
   end
