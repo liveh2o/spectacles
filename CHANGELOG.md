@@ -5,6 +5,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [7.2.0] – 2024-11-27
+
+- Require Ruby 3.1+
+- Require Rails 7.2
+
 ## [7.1.0] – 2024-11-27
 
 - Require Rails 7.1
