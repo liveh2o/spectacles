@@ -20,6 +20,22 @@ jobs:
           bundler-cache: true
       - run: bundle exec standardrb --format github
 
+  test:
+    name: Tests (Spectacles)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version: [2.7, head, jruby-head]
+    continue-on-error: ${{ endsWith(matrix.ruby-version, 'head') || matrix.ruby-version == 'debug' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+      - run: bundle exec rake test:spectacles
+
   test-mysql:
     name: Tests (MySQL)
     runs-on: ubuntu-latest
