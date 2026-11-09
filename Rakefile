@@ -10,6 +10,7 @@ namespace :test do
   end
 
   adapters = %i[mysql2 postgresql sqlite3]
+  adapters << :trilogy unless RUBY_ENGINE == "jruby"
   adapters.each do |adapter|
     Minitest::TestTask.create adapter do |t|
       t.test_globs = ["test/adapters/#{t.name}*_test.rb"]

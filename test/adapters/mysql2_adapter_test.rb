@@ -4,6 +4,7 @@ describe "Spectacles::SchemaStatements::Mysql2Adapter" do
   config = {
     adapter: "mysql2",
     host: ENV["MYSQL_HOST"] || "localhost",
+    port: ENV.fetch("MYSQL_PORT", 3306).to_i,
     username: ENV["MYSQL_USER"] || "root",
     password: ENV["MYSQL_PASSWORD"]
   }

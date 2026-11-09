@@ -1,5 +1,5 @@
-# This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
-# For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
+# Runs the test suite for each Rails version (from Appraisals), Ruby version,
+# and database adapter.
 name: build
 
 on:
@@ -7,6 +7,10 @@ on:
     branches: [main]
   pull_request:
     branches: "*"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   style:
@@ -20,116 +24,106 @@ jobs:
           bundler-cache: true
       - run: bundle exec standardrb --format github
 
-  test:
-    name: Tests (Spectacles)
+  # Git ignores gemfiles/. Generate them once from Appraisals and share them
+  # with each test job. The output is the same on MRI and JRuby.
+  gemfiles:
+    name: Generate gemfiles (Appraisal)
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        ruby-version: [3.2, head, jruby-head]
-    continue-on-error: ${{ endsWith(matrix.ruby-version, 'head') || matrix.ruby-version == 'debug' }}
     steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby-version }}
+          ruby-version: "3.4"
           bundler-cache: true
-      - run: bundle exec rake test:spectacles
+      - run: bundle exec appraisal generate
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gemfiles
+          path: gemfiles/*.gemfile
+          if-no-files-found: error
+          retention-days: 1
 
-  test-mysql:
-    name: Tests (MySQL)
+  test:
+    name: ${{ matrix.adapter }} / Ruby ${{ matrix.ruby }} / ${{ matrix.gemfile }}
+    needs: gemfiles
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental || false }}
+
     strategy:
       fail-fast: false
       matrix:
-        ruby-version: [3.2, head, jruby-head]
-    continue-on-error: ${{ endsWith(matrix.ruby-version, 'head') || matrix.ruby-version == 'debug' }}
-
-    services:
-      mysql:
-        image: mysql:5.7
-        ports:
-          - 3306
+        ruby: ["3.2", "3.3", "3.4", "4.0", "jruby-10.0"]
+        gemfile: [rails_8.0, rails_8.1]
+        adapter: [spectacles, sqlite3, postgresql, mysql2, trilogy]
+        exclude:
+          # Trilogy is a C extension, so JRuby cannot use it.
+          - ruby: jruby-10.0
+            adapter: trilogy
+          # The Rails 8.1 JDBC adapters for PostgreSQL and MySQL are not released.
+          - ruby: jruby-10.0
+            gemfile: rails_8.1
+            adapter: postgresql
+          - ruby: jruby-10.0
+            gemfile: rails_8.1
+            adapter: mysql2
+        include:
+          # Early warning for the next Ruby releases. Failures do not block.
+          - ruby: head
+            gemfile: rails_8.1
+            adapter: spectacles
+            experimental: true
+          - ruby: head
+            gemfile: rails_8.1
+            adapter: sqlite3
+            experimental: true
+          - ruby: jruby-head
+            gemfile: rails_8.1
+            adapter: sqlite3
+            experimental: true
 
     env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
       JRUBY_OPTS: "-J-Xms64M -J-Xmx1024M"
+      POSTGRES_HOST: localhost
+      POSTGRES_USER: postgres
+      MYSQL_HOST: 127.0.0.1
       MYSQL_USER: root
       MYSQL_PASSWORD: root
 
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ matrix.ruby-version }}
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-      - name: Setup database
-        run: |
-          sudo service mysql start
-      - name: Run tests
-        run: |
-          bundle exec rake test:mysql2
-
-  test-pgsql:
-    name: Tests (Postgres)
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        ruby-version: [3.2, head, jruby-head]
-    continue-on-error: ${{ endsWith(matrix.ruby-version, 'head') || matrix.ruby-version == 'debug' }}
-
+    # A service with an empty image does not start. Each job starts only the
+    # database that its adapter needs.
     services:
       postgres:
-        image: postgres:11
+        image: ${{ matrix.adapter == 'postgresql' && 'postgres:17' || '' }}
         env:
-          POSTGRES_PASSWORD: postgres
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
-    env:
-      JRUBY_OPTS: "-J-Xms64M -J-Xmx1024M"
-      PGHOST: localhost
-      PGPORT: 5432
-      PGUSER: postgres
-
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ matrix.ruby-version }}
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-      - name: Setup database
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      mysql:
+        image: ${{ (matrix.adapter == 'mysql2' || matrix.adapter == 'trilogy') && 'mysql:8.4' || '' }}
         env:
-          PGPASSWORD: postgres
-        run: |
-          createdb spectacles_test
-      - name: Run tests
-        run: |
-          bundle exec rake test:postgresql
-
-  test-sqlite:
-    name: Tests (SQLite)
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        ruby-version: [3.2, head, jruby-head]
-    continue-on-error: ${{ endsWith(matrix.ruby-version, 'head') || matrix.ruby-version == 'debug' }}
-
-    env:
-      JRUBY_OPTS: "-J-Xms64M -J-Xmx1024M"
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping -proot"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - uses: actions/download-artifact@v4
         with:
-          ruby-version: ${{ matrix.ruby-version }}
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-      - name: Run tests
-        run: |
-          bundle exec rake test:sqlite3
+          name: gemfiles
+          path: gemfiles
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - run: bundle exec rake test:${{ matrix.adapter }}

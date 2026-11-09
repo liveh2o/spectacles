@@ -1,6 +1,7 @@
 shared_examples_for "an adapter" do |adapter|
   shared_base = Class.new do
     extend Spectacles::SchemaStatements.const_get(adapter)
+
     def self.quote_table_name(name)
       name
     end
@@ -16,31 +17,31 @@ shared_examples_for "an adapter" do |adapter|
 
   describe "ActiveRecord::SchemaDumper#dump" do
     before(:each) do
-      ActiveRecord::Base.connection.drop_view(:new_product_users)
-      ActiveRecord::Base.connection.drop_view(:other_product_users)
+      ActiveRecord::Base.lease_connection.drop_view(:new_product_users)
+      ActiveRecord::Base.lease_connection.drop_view(:other_product_users)
 
-      ActiveRecord::Base.connection.create_view(:new_product_users) do
+      ActiveRecord::Base.lease_connection.create_view(:new_product_users) do
         "SELECT name AS product_name, first_name AS username FROM
         products JOIN users ON users.id = products.user_id"
       end
 
-      ActiveRecord::Base.connection.create_view(:other_product_users) do
+      ActiveRecord::Base.lease_connection.create_view(:other_product_users) do
         "SELECT name AS product_name, first_name AS username FROM
         products JOIN users ON users.id = products.user_id"
       end
 
-      if ActiveRecord::Base.connection.supports_materialized_views?
-        ActiveRecord::Base.connection.drop_materialized_view(:materialized_product_users)
-        ActiveRecord::Base.connection.drop_materialized_view(:empty_materialized_product_users)
+      if ActiveRecord::Base.lease_connection.supports_materialized_views?
+        ActiveRecord::Base.lease_connection.drop_materialized_view(:materialized_product_users)
+        ActiveRecord::Base.lease_connection.drop_materialized_view(:empty_materialized_product_users)
 
-        ActiveRecord::Base.connection.create_materialized_view(:materialized_product_users, force: true) do
+        ActiveRecord::Base.lease_connection.create_materialized_view(:materialized_product_users, force: true) do
           "SELECT name AS product_name, first_name AS username FROM
           products JOIN users ON users.id = products.user_id"
         end
 
-        ActiveRecord::Base.connection.add_index :materialized_product_users, :product_name
+        ActiveRecord::Base.lease_connection.add_index :materialized_product_users, :product_name
 
-        ActiveRecord::Base.connection.create_materialized_view(:empty_materialized_product_users, storage: {fillfactor: 50}, data: false, force: true) do
+        ActiveRecord::Base.lease_connection.create_materialized_view(:empty_materialized_product_users, storage: {fillfactor: 50}, data: false, force: true) do
           "SELECT name AS product_name, first_name AS username FROM
           products JOIN users ON users.id = products.user_id"
         end
@@ -53,7 +54,7 @@ shared_examples_for "an adapter" do |adapter|
       _(stream.string).must_match(/create_view/)
     end
 
-    if ActiveRecord::Base.connection.supports_materialized_views?
+    if ActiveRecord::Base.lease_connection.supports_materialized_views?
       it "should return create_materialized_view in dump stream" do
         stream = StringIO.new
         ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection_pool, stream)
@@ -78,27 +79,27 @@ shared_examples_for "an adapter" do |adapter|
       stream = StringIO.new
       ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection_pool, stream)
 
-      if ActiveRecord::Base.connection.supports_materialized_views?
-        ActiveRecord::Base.connection.materialized_views.each do |view|
-          ActiveRecord::Base.connection.drop_materialized_view(view)
+      if ActiveRecord::Base.lease_connection.supports_materialized_views?
+        ActiveRecord::Base.lease_connection.materialized_views.each do |view|
+          ActiveRecord::Base.lease_connection.drop_materialized_view(view)
         end
       end
 
-      ActiveRecord::Base.connection.views.each do |view|
-        ActiveRecord::Base.connection.drop_view(view)
+      ActiveRecord::Base.lease_connection.views.each do |view|
+        ActiveRecord::Base.lease_connection.drop_view(view)
       end
 
-      ActiveRecord::Base.connection.tables.each do |table|
-        ActiveRecord::Base.connection.drop_table(table)
+      ActiveRecord::Base.lease_connection.tables.each do |table|
+        ActiveRecord::Base.lease_connection.drop_table(table)
       end
 
       # TODO: Find a better way to do this... – AH
       eval(stream.string) # rubocop:disable Security/Eval
 
-      _(ActiveRecord::Base.connection.views).must_include("new_product_users")
+      _(ActiveRecord::Base.lease_connection.views).must_include("new_product_users")
 
-      if ActiveRecord::Base.connection.supports_materialized_views?
-        _(ActiveRecord::Base.connection.materialized_views).must_include("materialized_product_users")
+      if ActiveRecord::Base.lease_connection.supports_materialized_views?
+        _(ActiveRecord::Base.lease_connection.materialized_views).must_include("materialized_product_users")
       end
     end
   end
@@ -161,18 +162,18 @@ shared_examples_for "an adapter" do |adapter|
 
   describe "#tables" do
     it "returns an array of all table names" do
-      _(ActiveRecord::Base.connection.tables).must_include("products")
-      _(ActiveRecord::Base.connection.tables).must_include("users")
+      _(ActiveRecord::Base.lease_connection.tables).must_include("products")
+      _(ActiveRecord::Base.lease_connection.tables).must_include("users")
     end
 
     it "does not include the names of the views" do
-      _(ActiveRecord::Base.connection.tables).wont_include("new_product_users")
+      _(ActiveRecord::Base.lease_connection.tables).wont_include("new_product_users")
     end
   end
 
   describe "#views" do
     it "returns an array of all views" do
-      _(ActiveRecord::Base.connection.views).must_include("new_product_users")
+      _(ActiveRecord::Base.lease_connection.views).must_include("new_product_users")
     end
   end
 

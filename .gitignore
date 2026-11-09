@@ -8,3 +8,6 @@
 /spec/reports/
 /test/*.db*
 /tmp/
+
+# Appraisal generates these from Appraisals. Run `bundle exec appraisal generate`.
+/gemfiles/

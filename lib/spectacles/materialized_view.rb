@@ -7,14 +7,14 @@ module Spectacles
     end
 
     def self.materialized_view_exists?
-      connection.materialized_view_exists?(view_name)
+      with_connection { |c| c.materialized_view_exists?(view_name) }
     end
 
     def self.refresh!(concurrently: false)
       if concurrently
-        connection.refresh_materialized_view_concurrently(view_name)
+        with_connection { |c| c.refresh_materialized_view_concurrently(view_name) }
       else
-        connection.refresh_materialized_view(view_name)
+        with_connection { |c| c.refresh_materialized_view(view_name) }
       end
     end
 
