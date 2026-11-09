@@ -143,7 +143,7 @@ bundle exec appraisal rails-8.1 rake test:sqlite3
 
 The PostgreSQL, MySQL2, and Trilogy tests need a running database server. Set `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, and `MYSQL_PASSWORD` to point the tests at it.
 
-After you change `Appraisals`, run `bundle exec appraisal generate` and commit the files in `gemfiles/`.
+`appraisal install` generates the gemfiles in `gemfiles/` from `Appraisals`. Git ignores them, so run `bundle exec appraisal generate` again after you change `Appraisals` or `Gemfile`.
 
 # License
 

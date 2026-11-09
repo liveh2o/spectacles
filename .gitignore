@@ -9,6 +9,5 @@
 /test/*.db*
 /tmp/
 
-# Appraisal: commit the generated gemfiles, ignore their lockfiles.
-/gemfiles/*.gemfile.lock
-/gemfiles/.bundle/
+# Appraisal generates these from Appraisals. Run `bundle exec appraisal generate`.
+/gemfiles/

@@ -24,8 +24,28 @@ jobs:
           bundler-cache: true
       - run: bundle exec standardrb --format github
 
+  # Git ignores gemfiles/. Generate them once from Appraisals and share them
+  # with each test job. The output is the same on MRI and JRuby.
+  gemfiles:
+    name: Generate gemfiles (Appraisal)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+      - run: bundle exec appraisal generate
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gemfiles
+          path: gemfiles/*.gemfile
+          if-no-files-found: error
+          retention-days: 1
+
   test:
     name: ${{ matrix.adapter }} / Ruby ${{ matrix.ruby }} / ${{ matrix.gemfile }}
+    needs: gemfiles
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental || false }}
 
@@ -98,6 +118,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: gemfiles
+          path: gemfiles
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
