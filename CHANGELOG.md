@@ -8,6 +8,12 @@ since Spectacles depends on specific Rails versions.
 
 ## [Unreleased]
 
+- Support Rails 8.0 and 8.1
+- Add the Trilogy adapter (the default MySQL adapter in new Rails 8 apps)
+- Use `with_connection` in `Spectacles::View` and `Spectacles::MaterializedView`
+- Remove the obsolete `legacy_connection_handling` check from `create_view`
+- Test each Rails version with Appraisal across Ruby, JRuby, and each adapter
+
 ## [8.0.0] – 2024-11-27
 
 - Require Ruby 3.2+

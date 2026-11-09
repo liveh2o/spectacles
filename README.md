@@ -8,7 +8,7 @@ Spectacles adds database view functionality to ActiveRecord. It is heavily inspi
 
 Spectacles provides the ability to create views in migrations using a similar format to creating tables. It also provides an abstract view class that inherits from `ActiveRecord::Base` that can be used to create view-backed models.
 
-It currently works with the SQLite, MySQL2, PostgreSQL, and Vertica drivers.
+It currently works with the SQLite, MySQL2, Trilogy, PostgreSQL, and Vertica drivers. It supports Rails 8.0 and 8.1.
 
 # Using Spectacles
 
@@ -130,6 +130,20 @@ Also, you can specify a few different options to `create_materialized_view` to a
     # ...
   end
   ```
+
+# Development
+
+Spectacles uses [Appraisal](https://github.com/thoughtbot/appraisal) to test each supported Rails version.
+
+```shell
+bundle install
+bundle exec appraisal install
+bundle exec appraisal rails-8.1 rake test:sqlite3
+```
+
+The PostgreSQL, MySQL2, and Trilogy tests need a running database server. Set `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, and `MYSQL_PASSWORD` to point the tests at it.
+
+After you change `Appraisals`, run `bundle exec appraisal generate` and commit the files in `gemfiles/`.
 
 # License
 
