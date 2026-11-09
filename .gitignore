@@ -8,3 +8,7 @@
 /spec/reports/
 /test/*.db*
 /tmp/
+
+# Appraisal: commit the generated gemfiles, ignore their lockfiles.
+/gemfiles/*.gemfile.lock
+/gemfiles/.bundle/

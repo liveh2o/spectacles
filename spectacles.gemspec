@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
     ls.readlines("\x0", chomp: true).reject do |f|
       (f == gemspec) ||
-        f.start_with?(*%w[bin/ test/ spec/ features/ .git .github appveyor Gemfile])
+        f.start_with?(*%w[bin/ test/ spec/ features/ gemfiles/ .git .github appveyor Appraisals Gemfile])
     end
   end
   spec.bindir = "exe"
@@ -34,6 +34,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activerecord", ">= 8.0", "< 8.2"
   spec.add_dependency "activesupport", ">= 8.0", "< 8.2"
 
+  spec.add_development_dependency "appraisal"
   spec.add_development_dependency "minitest", ">= 5.0"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "standard"
