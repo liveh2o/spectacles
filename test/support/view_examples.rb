@@ -1,5 +1,5 @@
 shared_examples_for "a view model" do
-  ActiveRecord::Base.connection.create_view(:new_product_users) do
+  ActiveRecord::Base.lease_connection.create_view(:new_product_users) do
     "SELECT name AS product_name, first_name AS username FROM
     products JOIN users ON users.id = products.user_id"
   end
@@ -27,8 +27,8 @@ shared_examples_for "a view model" do
     end
   end
 
-  if ActiveRecord::Base.connection.supports_materialized_views?
-    ActiveRecord::Base.connection.create_materialized_view(:materialized_product_users) do
+  if ActiveRecord::Base.lease_connection.supports_materialized_views?
+    ActiveRecord::Base.lease_connection.create_materialized_view(:materialized_product_users) do
       "SELECT name AS product_name, first_name AS username FROM
       products JOIN users ON users.id = products.user_id"
     end
@@ -51,7 +51,7 @@ shared_examples_for "a view model" do
       end
 
       it "is readonly" do
-        _(MaterializedProductUser.first.readonly?).must_equal true
+        _(MaterializedProductUser.order(:product_name).first.readonly?).must_equal true
       end
     end
   end

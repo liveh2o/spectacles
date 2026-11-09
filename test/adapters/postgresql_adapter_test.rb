@@ -5,7 +5,7 @@ describe "Spectacles::SchemaStatements::PostgreSQLAdapter" do
     adapter: "postgresql",
     host: ENV["POSTGRES_HOST"] || "localhost",
     username: ENV["POSTGRES_USER"] || "postgres",
-    port: ENV["POSTGRES_port"] || 5432
+    port: ENV.fetch("POSTGRES_PORT", 5432).to_i
   }
   configure_database(config)
   recreate_database("spectacles_test")
@@ -16,6 +16,7 @@ describe "Spectacles::SchemaStatements::PostgreSQLAdapter" do
 
   test_base = Class.new do
     extend Spectacles::SchemaStatements::PostgreSQLAdapter
+
     def self.schema_search_path
       ""
     end

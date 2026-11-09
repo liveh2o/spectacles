@@ -22,6 +22,7 @@ platforms :ruby do
   gem "mysql2"
   gem "pg"
   gem "sqlite3"
+  gem "trilogy"
 end
 
 group :test do

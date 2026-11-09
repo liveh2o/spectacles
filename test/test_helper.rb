@@ -44,10 +44,10 @@ end
 def recreate_database(database)
   ActiveRecord::Base.establish_connection(@database_config)
   begin
-    ActiveRecord::Base.connection.drop_database(database)
+    ActiveRecord::Base.lease_connection.drop_database(database)
   rescue
     nil
   end
-  ActiveRecord::Base.connection.create_database(database)
+  ActiveRecord::Base.lease_connection.create_database(database)
   ActiveRecord::Base.establish_connection(@database_config.merge(database: database))
 end

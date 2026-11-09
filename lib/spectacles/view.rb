@@ -7,7 +7,7 @@ module Spectacles
     end
 
     def self.view_exists?
-      connection.view_exists?(view_name)
+      with_connection { |c| c.view_exists?(view_name) }
     end
 
     class << self
